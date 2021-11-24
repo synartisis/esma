@@ -1,4 +1,2 @@
-static: mime types
-req.params
-req.query
+static: stream binary files
 req.body
