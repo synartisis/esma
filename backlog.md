@@ -1,2 +1,4 @@
 static: mime types
-middleware: params
+req.params
+req.query
+req.body
