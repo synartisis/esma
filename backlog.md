@@ -1,3 +1,3 @@
 static: mime types
 middleware: error handling
-middleware: next()
+middleware: params
