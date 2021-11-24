@@ -1,21 +1,21 @@
 {
-  "name": "esmserve",
+  "name": "esmit",
   "version": "0.0.0",
   "description": "",
   "type": "module",
-  "exports": "./lib/esmserve.js",
+  "exports": "./lib/esmit.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/synartisis/esmserve.git"
+    "url": "git+https://github.com/synartisis/esmit.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/synartisis/esmserve/issues"
+    "url": "https://github.com/synartisis/esmit/issues"
   },
-  "homepage": "https://github.com/synartisis/esmserve#readme"
+  "homepage": "https://github.com/synartisis/esmit#readme"
 }
