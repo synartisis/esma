@@ -1,21 +1,21 @@
 {
-  "name": "esmit",
+  "name": "esma",
   "version": "0.0.0",
   "description": "",
   "type": "module",
-  "exports": "./lib/esmit.js",
+  "exports": "./lib/esma.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/synartisis/esmit.git"
+    "url": "git+https://github.com/synartisis/esma.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/synartisis/esmit/issues"
+    "url": "https://github.com/synartisis/esma/issues"
   },
-  "homepage": "https://github.com/synartisis/esmit#readme"
+  "homepage": "https://github.com/synartisis/esma#readme"
 }
