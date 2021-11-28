@@ -1,4 +1,8 @@
 express error handler
+  router: middleware -> middlewareStack + errorStack*    *maybe global
+  if handler.length==4, must go to errorStack
+  on error, use first errorStack, then request-listener.finalHandler
+
 
 http.createServer(options)
 
