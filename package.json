@@ -5,6 +5,7 @@
   "type": "module",
   "main": "./lib/esma.js",
   "exports": "./lib/esma.js",
+  "types": "./index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
