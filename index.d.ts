@@ -52,7 +52,17 @@ declare global {
       middleware: Middleware[]
       use(path?: string | Handler, ...handlers: Handler[]): void
       handleRequest(req: Request, res: Response): Promise<void | object>
-      setHttpMethodHandler(method: string): void
+      // setHttpMethodHandler(method: string): void
+      get(path?: string | Handler, ...handlers: Handler[]): void
+      post(path?: string | Handler, ...handlers: Handler[]): void
+      put(path?: string | Handler, ...handlers: Handler[]): void
+      delete(path?: string | Handler, ...handlers: Handler[]): void
+      head(path?: string | Handler, ...handlers: Handler[]): void
+      options(path?: string | Handler, ...handlers: Handler[]): void
+      trace(path?: string | Handler, ...handlers: Handler[]): void
+      patch(path?: string | Handler, ...handlers: Handler[]): void
+      all(path?: string | Handler, ...handlers: Handler[]): void
+      METHOD(method: string, path?: string | Handler, handlers: Handler[]): void
       toJSON(): object
     }
 
