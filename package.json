@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/synartisis/esma/issues"
   },
-  "homepage": "https://github.com/synartisis/esma#readme"
+  "homepage": "https://github.com/synartisis/esma#readme",
+  "dependencies": {
+    "zlib": "^1.0.5"
+  }
 }

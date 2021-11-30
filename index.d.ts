@@ -25,7 +25,7 @@ declare global {
       baseUrl: string
       params?: object
       query?: object
-      _body?: object
+      private _body?: object
       body: Promise<object>
     }
 
