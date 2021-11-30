@@ -1,8 +1,12 @@
-import type http from 'http'
+import type * as http from 'http'
 
 declare const _default: {
   createServer: () => esma.Server
-  static: (root: string, options?: object) => esma.Handler
+  static: (root: string, options?: {
+    index: string;
+    extensions: string[];
+    redirect: boolean;
+  }) => esma.Handler
 }
 export default _default
 
@@ -15,10 +19,14 @@ declare global {
   
   namespace esma {
 
-    type Request = http.IncomingMessage & {
+    class Request extends http.IncomingMessage {
       originalUrl: string
       url: string
       baseUrl: string
+      params?: object
+      query?: object
+      _body?: object
+      body: Promise<object>
     }
 
     type Response = http.ServerResponse & {
@@ -34,7 +42,8 @@ declare global {
       applyHandlers(req: Request, res: Response): Promise<void | object>
     }
 
-    type Handler = Router | ((req: Request, res: Response, next?: Function) => Promise<object> | void)
+    type FunctionHandler = (req: Request, res: Response, next?: Function) => Promise<object> | void
+    type Handler = Router | FunctionHandler
 
 
     type Router = {
@@ -49,6 +58,16 @@ declare global {
 
     type Server = http.Server & Router
 
+  }
+
+
+  declare module http {
+    export * from 'http'
+    import * as nodeHttp from 'http'
+    export class IncomingMessage extends nodeHttp.IncomingMessage { url: string }
+    export type RequestListener = (req: IncomingMessage, res: nodeHttp.ServerResponse) => void;
+    // export function createServer(requestListener?: RequestListener): Server;
+    // export function createServer(options: ServerOptions, requestListener?: RequestListener): Server;
   }
 
 }
