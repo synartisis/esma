@@ -12,6 +12,7 @@ load testing: autocannon -c 1000 -d 60 localhost:3000
 =================
 
 body-parser: CONTENT_LENGTH_LIMIT setting
+static: etag, maxAge options
 
 =================
 
