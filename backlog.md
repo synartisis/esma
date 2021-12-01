@@ -1,5 +1,8 @@
-req.baseUrl
-  https://expressjs.com/en/api.html#req.baseUrl
+res.send emulate on finalHandler (Content-Type etc), support res.send https://expressjs.com/en/api.html#res.send
+
+req.baseUrl  https://expressjs.com/en/api.html#req.baseUrl
+
+=================
 
 etag (dynamic content) https://expressjs.com/en/api.html#etag.options.table
 
@@ -20,6 +23,7 @@ load testing: autocannon -c 1000 -d 60 localhost:3000
 
 body-parser: CONTENT_LENGTH_LIMIT setting
 static: etag, maxAge options
+res.sendFile https://expressjs.com/en/api.html#res.sendFile
 
 =================
 
