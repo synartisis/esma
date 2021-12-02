@@ -3,17 +3,22 @@ import type * as http from 'http'
 declare const _default: {
   createServer: () => esma.Server
   static: (root: string, options?: {
-    index: string;
-    extensions: string[];
-    redirect: boolean;
+    dotfiles: string,
+    etag: boolean,
+    extensions: string[],
+    index: string,
+    lastModified: boolean,
+    maxAge: number,
+    redirect: boolean,
   }) => esma.Handler
+  setSetting(name: EsmaSettings, value: any)
 }
 export default _default
 
-export const router: () => esma.Router
-export const Router: () => esma.Router
+export function router(): esma.Router
+export function Router(): esma.Router
 
-
+type EsmaSettings = 'env' | 'etag'
 
 declare global {
   

@@ -1,9 +1,9 @@
+etag - after static, applies to dynamic too
+refactor result: handlers return values should go to result.http.body (maybe remove result.http?)
 
 =================
 
 etag (dynamic content) https://expressjs.com/en/api.html#etag.options.table
-
-http.createServer(options)
 
 req.body multipart/form-data
   https://www.microfocus.com/documentation/idol/IDOL_12_0/MediaServer/Guides/html/English/Content/Shared_Admin/_ADM_POST_requests.htm
@@ -17,13 +17,13 @@ load testing: autocannon -c 1000 -d 60 localhost:3000
 =================
 
 body-parser: CONTENT_LENGTH_LIMIT setting
-static: etag, maxAge options
+static: maxAge option
 res.sendFile https://expressjs.com/en/api.html#res.sendFile
 Cache-Control header
 
 =================
 
-esma settings: env, trust proxy (http://expressjs.com/en/guide/behind-proxies.html)
+esma settings: trust proxy (http://expressjs.com/en/guide/behind-proxies.html)
 
 req.cookies, req.signedCookies https://expressjs.com/en/api.html#req.cookies
 
