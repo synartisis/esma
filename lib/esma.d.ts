@@ -39,7 +39,7 @@ declare global {
       handlers: Handler[]
       router: Router
       urlPattern: any
-      applyHandlers(req: Request, res: Response): Promise<void | object>
+      applyHandlers(req: Request, res: Response, ctx: any): Promise<void | object>
     }
 
     type FunctionHandler = (req: Request, res: Response, next?: Function) => Promise<object> | void
@@ -51,7 +51,7 @@ declare global {
       mountpath: string
       middleware: Middleware[]
       use(path?: string | Handler, ...handlers: Handler[]): void
-      handleRequest(req: Request, res: Response): Promise<void | object>
+      private handleRequest(req: Request, res: Response, ctx: any): Promise<void | object>
       // setHttpMethodHandler(method: string): void
       get(path?: string | Handler, ...handlers: Handler[]): void
       post(path?: string | Handler, ...handlers: Handler[]): void
