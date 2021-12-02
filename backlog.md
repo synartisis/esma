@@ -11,8 +11,6 @@ req.body multipart/form-data
 
 
 
-check http headers returned from nginx  => curl -I http://anaggelia.lan.eoppep.gr/
-
 load testing: autocannon -c 1000 -d 60 localhost:3000
 
 
