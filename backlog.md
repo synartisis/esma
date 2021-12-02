@@ -1,5 +1,3 @@
-res.send emulate on finalHandler (Content-Type etc), support res.send https://expressjs.com/en/api.html#res.send
-
 req.baseUrl  https://expressjs.com/en/api.html#req.baseUrl
 
 =================
