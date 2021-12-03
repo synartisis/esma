@@ -11,7 +11,7 @@ declare const _default: {
     maxAge: number,
     redirect: boolean,
   }) => esma.Handler
-  setSetting(name: EsmaSettings, value: any)
+  config(userSettings: object)
 }
 export default _default
 
