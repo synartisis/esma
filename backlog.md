@@ -13,7 +13,6 @@ load testing: autocannon -c 1000 -d 60 localhost:3000
 
 =================
 
-body-parser: CONTENT_LENGTH_LIMIT setting
 static: maxAge option
 res.sendFile https://expressjs.com/en/api.html#res.sendFile
 Cache-Control header
