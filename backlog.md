@@ -1,4 +1,4 @@
-refactor result: handlers return values should go to result.http.body (maybe remove result.http?)
+Content-Type: maybe append charset=utf-8  ?
 
 =================
 
