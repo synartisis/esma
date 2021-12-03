@@ -1,9 +1,6 @@
-etag - after static, applies to dynamic too
 refactor result: handlers return values should go to result.http.body (maybe remove result.http?)
 
 =================
-
-etag (dynamic content) https://expressjs.com/en/api.html#etag.options.table
 
 req.body multipart/form-data
   https://www.microfocus.com/documentation/idol/IDOL_12_0/MediaServer/Guides/html/English/Content/Shared_Admin/_ADM_POST_requests.htm
