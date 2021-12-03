@@ -1,4 +1,3 @@
-Check static
 Content-Type: maybe append charset=utf-8  ?
 
 =================
