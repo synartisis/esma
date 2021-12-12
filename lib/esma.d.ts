@@ -49,6 +49,7 @@ declare global {
 
     type FunctionHandler = (req: Request, res: Response, next?: Function) => Promise<object> | void
     type Handler = Router | FunctionHandler
+    type ErrorHandler = (err: Error, req: Request, res: Response) => Promise<object> | void
 
 
     type Router = {
@@ -67,6 +68,7 @@ declare global {
       patch(path: string | Handler, ...handlers: Handler[]): void
       all(path: string | Handler, ...handlers: Handler[]): void
       private METHOD(method: string, path: string | Handler, handlers: Handler[]): void
+      onerror(handler: ErrorHandler): void
       toJSON(): object
     }
 
