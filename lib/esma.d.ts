@@ -74,6 +74,11 @@ declare global {
 
     type Server = http.Server & Router
 
+    type File = {
+      url: string
+      fname: string
+    }
+
   }
 
 
