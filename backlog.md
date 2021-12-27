@@ -1,4 +1,3 @@
-static: parametric filenames needs improvement on RegExes
 
 =================
 
