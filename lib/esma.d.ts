@@ -11,7 +11,7 @@ declare const _default: {
     maxAge: number,
     redirect: boolean,
   }) => esma.Handler
-  config(userSettings: object)
+  config(userSettings: esma.Settings)
 }
 export default _default
 
@@ -30,7 +30,7 @@ declare global {
       baseUrl: string
       params?: object
       query?: object
-      _body: object | null
+      _body?: object
       body: Promise<object>
     }
 
@@ -51,15 +51,16 @@ declare global {
     }
 
     type FunctionHandler = (req: Request, res: Response, next?: Function) => Promise<any> | void
+    type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => Promise<object> | void
     type Handler = Router | FunctionHandler
-    type ErrorHandler = (err: Error, req: Request, res: Response) => Promise<object> | void
 
 
     type Router = {
-      type: string
+      type: 'router'
       mountpath: string
       middleware: Middleware[]
-      use(path: string | Handler, ...handlers: Handler[]): void
+      use(path: string, ...handlers: Handler[]): void
+      use(...handlers: Handler[]): void
       private handleRequest(req: Request, res: Response, ctx: any): Promise<void | object>
       get(path: string | Handler, ...handlers: Handler[]): void
       post(path: string | Handler, ...handlers: Handler[]): void
