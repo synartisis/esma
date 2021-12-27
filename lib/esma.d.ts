@@ -99,11 +99,6 @@ declare global {
 
   declare module http {
     export * from 'http'
-    import * as nodeHttp from 'http'
-    export class IncomingMessage extends nodeHttp.IncomingMessage { url: string }
-    export type RequestListener = (req: IncomingMessage, res: nodeHttp.ServerResponse) => void;
-    // export function createServer(requestListener?: RequestListener): Server;
-    // export function createServer(options: ServerOptions, requestListener?: RequestListener): Server;
   }
 
 }
