@@ -30,12 +30,15 @@ declare global {
       baseUrl: string
       params?: object
       query?: object
-      private _body?: object
+      _body: object | null
       body: Promise<object>
     }
 
     type Response = http.ServerResponse & {
       writableEnded: boolean
+      locals: any
+      send: (body: any) => void
+      redirect: (loc: string) => void
     }
 
     type Middleware = {
@@ -47,7 +50,7 @@ declare global {
       applyHandlers(req: Request, res: Response, ctx: any): Promise<void | object>
     }
 
-    type FunctionHandler = (req: Request, res: Response, next?: Function) => Promise<object> | void
+    type FunctionHandler = (req: Request, res: Response, next?: Function) => Promise<any> | void
     type Handler = Router | FunctionHandler
     type ErrorHandler = (err: Error, req: Request, res: Response) => Promise<object> | void
 
@@ -73,6 +76,18 @@ declare global {
     }
 
     type Server = http.Server & Router
+
+    type Settings = {
+      env: string
+      etag: 'weak' | 'strong'
+      bodyParserLimit: number
+    }
+
+    type Context = {
+      settings: Settings
+      express_action: string | null
+      express_result: any
+      }
 
     type File = {
       url: string
