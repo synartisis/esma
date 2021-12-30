@@ -7,11 +7,11 @@ const server = utils.getServer()
 describe('express compat', () => {
 
   it('should support express.js next()', async () => {
-    server.use('/express/next', (req, res, next) => {
+    server.get('/express/next', (req, res, next) => {
       req.data = 1
       next()
     })
-    server.use('/express/next', (req, res, next) => {
+    server.get('/express/next', (req, res, next) => {
       req.data += 1
       return req.data
     })
@@ -19,8 +19,24 @@ describe('express compat', () => {
     assert.equal(res.body, '2')
   })
 
+  it(`should support express.js next('route')`, async () => {
+    server.get('/express/next-route', (req, res, next) => {
+      req.nextRoutes = ['A']
+      next('route')
+    }, (req, res, next) => {
+      req.nextRoutes.push('B')
+      next()
+    })
+    server.get('/express/next-route', (req, res, next) => {
+      req.nextRoutes.push('C')
+      return req.nextRoutes
+    })
+    const res = await utils.get('/express/next-route')
+    assert.equal(res.body, JSON.stringify(['A', 'C']))
+  })
+
   it('should support express.js res.send', async () => {
-    server.use('/express/send', (req, res) => {
+    server.get('/express/send', (req, res) => {
       res.send('test')
     })
     const res = await utils.get('/express/send')
@@ -28,7 +44,7 @@ describe('express compat', () => {
   })
 
   it('should support express.js res.redirect', async () => {
-    server.use('/express/redirect', (req, res) => {
+    server.get('/express/redirect', (req, res) => {
       res.redirect('/express/new-location')
     })
     const res = await utils.get('/express/redirect')

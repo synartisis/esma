@@ -18,7 +18,7 @@ describe('router - use', () => {
   })
 
   it('should accept multiple middleware functions', async () => {
-    server.use('/route2', req => req.data = 1, req => { req.data+=1; console.log('+', req.data); return req.data })
+    server.use('/route2', req => { req.data = 1 }, req => ++req.data)
     const res = await utils.get('/route2')
     assert.equal(res.body, '2')
   })

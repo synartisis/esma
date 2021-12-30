@@ -1,4 +1,6 @@
-tests
+tests - completion
+.use should mount only the paths that begin with a / right after the mountpath
+rethink types/structure for middleware
 
 =================
 
