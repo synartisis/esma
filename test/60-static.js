@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 import * as utils from './test-utils.js'
 import esma from '../lib/esma.js'
+import fs from 'node:fs/promises'
 
 const server = utils.getServer()
 const __dirname = new URL('.', import.meta.url).pathname
@@ -10,25 +11,26 @@ const settings = {
   maxAge: 3600,
 }
 server.use('/static', esma.static(__dirname + 'static', settings))
+const indexContent = await fs.readFile(__dirname + '/static/index.html', 'utf-8')
 
 describe('static', () => {
 
   it('should serve static files', async () => {
     const res = await utils.get('/static/index.html')
     assert.equal(res.statusCode, '200')
-    assert.equal(res.headers['etag'], '"116-17e0a79773b"')
+    assert.equal(res.body, indexContent)
   })
 
   it('should serve index when a directory is requested', async () => {
     const res = await utils.get('/static/')
     assert.equal(res.statusCode, '200')
-    assert.equal(res.headers['etag'], '"116-17e0a79773b"')
+    assert.equal(res.body, indexContent)
   })
 
   it('should append extensions', async () => {
     const res = await utils.get('/static/index')
     assert.equal(res.statusCode, '200')
-    assert.equal(res.headers['etag'], '"116-17e0a79773b"')
+    assert.equal(res.body, indexContent)
   })
 
   it('should ignore dotfiles', async () => {
