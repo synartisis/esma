@@ -9,6 +9,9 @@
   "scripts": {
     "test": "mocha --require test/hooks.js"
   },
+  "files": [
+    "lib/"
+  ],
   "engines": {
     "node": ">= 16.0.0"
   },
