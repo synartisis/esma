@@ -23,4 +23,12 @@ describe('router - use', () => {
     assert.equal(res.body, '2')
   })
 
+  it('should mount only to subpaths of mountpath', async () => {
+    server.use('/route3', req => 'route3 result')
+    const res1 = await utils.get('/route3/subpath')
+    const res2 = await utils.get('/route3-path')
+    assert.equal(res1.body, 'route3 result')
+    assert.equal(res2.statusCode, '404')
+  })
+
 })
