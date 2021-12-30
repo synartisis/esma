@@ -9,6 +9,9 @@
   "scripts": {
     "test": "mocha --require test/hooks.js"
   },
+  "engines": {
+    "node": ">= 16.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/synartisis/esma.git"
