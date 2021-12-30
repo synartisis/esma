@@ -7,7 +7,7 @@
   "exports": "./lib/esma.js",
   "types": "./lib/esma.d.ts",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --require test/hooks.js"
   },
   "repository": {
     "type": "git",
