@@ -9,13 +9,13 @@ describe('request', () => {
   it('should create query object based on request query', async () => {
     server.get('/query', async req => req.query)
     const res = await utils.get('/query?a=1&b=2')
-    assert.equal(res.body, '{"a":"1","b":"2"}')
+    assert.equal(res.body, JSON.stringify({ a: '1', b: '2'}))
   })
   
   it('should create params object based on url params', async () => {
     server.get('/params/:p1/fixed/:p2', async req => req.params)
     const res = await utils.get('/params/value1/fixed/value2')
-    assert.equal(res.body, '{"p1":"value1","p2":"value2"}')
+    assert.equal(res.body, JSON.stringify({ p1: 'value1', p2: 'value2' }))
   })
   
   it('should parse payload', async () => {

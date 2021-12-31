@@ -1,5 +1,6 @@
 import esma, { router } from '../lib/esma.js'
 import * as http from 'node:http'
+export { config, settings } from '../lib/esma-settings.js'
 
 
 export function createServer() {

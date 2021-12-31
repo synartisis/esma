@@ -1,5 +1,4 @@
-tests - completion
-rethink types/structure for middleware
+
 
 =================
 

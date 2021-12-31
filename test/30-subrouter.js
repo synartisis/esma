@@ -22,7 +22,7 @@ describe('subrouter', () => {
       return { url, baseUrl, originalUrl }
     })
     const res = await utils.get('/sub/paths')
-    assert.equal(res.body, '{"url":"/paths","baseUrl":"/sub","originalUrl":"/sub/paths"}')
+    assert.equal(res.body, JSON.stringify({ url: '/paths', baseUrl: '/sub', originalUrl: '/sub/paths' }))
   })
 
 })

@@ -18,8 +18,6 @@ export default _default
 export function router(): esma.Router
 export function Router(): esma.Router
 
-type EsmaSettings = 'env' | 'etag'
-
 declare global {
   
   namespace esma {
