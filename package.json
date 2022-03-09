@@ -1,6 +1,6 @@
 {
   "name": "esma",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "",
   "type": "module",
   "main": "./lib/esma.js",
@@ -10,7 +10,8 @@
     "test": "mocha --require test/hooks.js"
   },
   "files": [
-    "lib/"
+    "lib/",
+    "readme.md"
   ],
   "engines": {
     "node": ">= 16.0.0"
