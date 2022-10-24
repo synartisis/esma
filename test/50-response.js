@@ -16,6 +16,8 @@ server.get('/response/:type', async req => {
   if (type === 'buffer') body = Buffer.from(DATA.buffer)
   if (type === 'object') body = DATA.object
   if (type === 'array') body = DATA.array
+  if (type === 'null') body = null
+  if (type === 'undefined') body = undefined
   return body
 })
 server.get('/builtin', async req => {
@@ -58,6 +60,20 @@ describe('response object - response types', () => {
     assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
     assert.equal(res.headers['content-length'], Buffer.from(JSON.stringify(DATA.array)).byteLength)
     assert.equal(res.body, JSON.stringify(DATA.array))
+  })
+
+  it('null', async () => {
+    let res = await utils.get('/response/null')
+    assert.equal(res.headers['content-length'], 0)
+    assert.equal(res.body, '')
+  })
+
+  it('undefined', async () => {
+    const expected = 'Cannot GET /response/undefined'
+    let res = await utils.get('/response/undefined')
+    assert.equal(await res.body, expected)
+    assert.equal(res.headers['content-length'], expected.length)
+    assert.equal(res.statusCode, '404')
   })
 
 })
