@@ -52,6 +52,8 @@ declare global {
     type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => Promise<object> | void
     type Handler = Router | FunctionHandler
 
+    type StaticFileHandler = (html: string, filename: string, context: {}) => string
+
 
     type Router = {
       type: 'router'
