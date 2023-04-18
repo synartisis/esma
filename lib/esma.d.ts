@@ -15,8 +15,22 @@ declare const _default: {
 }
 export default _default
 
+export function createServer(): esma.Server
+export function static(root: string, options?: {
+  dotfiles: string,
+  etag: boolean,
+  extensions: string[],
+  index: string,
+  lastModified: boolean,
+  maxAge: number,
+  redirect: boolean,
+}): esma.Handler
+export function config(userSettings: esma.Settings)
+
 export function router(): esma.Router
 export function Router(): esma.Router
+
+export function multilingual(languages: string[]): esma.Handler
 
 declare global {
   
