@@ -56,7 +56,7 @@ declare global {
     type Middleware = {
       path: string
       method: string
-      handlers: Handler[]
+      handlers: Array<Handler | Promise<Handler>>
       router: Router
       urlPattern: any
       applyHandlers(req: Request, res: Response, ctx: any): Promise<void | object>
@@ -73,19 +73,19 @@ declare global {
       type: 'router'
       mountpath: string
       middleware: Middleware[]
-      use(path: string, ...handlers: Handler[]): void
-      use(...handlers: Handler[]): void
+      use(path: string, ...handlers: Array<Handler | Promise<Handler>>): void
+      use(...handlers: Array<Handler | Promise<Handler>>): void
       private handleRequest(req: Request, res: Response, ctx: any): Promise<void | object>
-      get(path: string | Handler, ...handlers: Handler[]): void
-      post(path: string | Handler, ...handlers: Handler[]): void
-      put(path: string | Handler, ...handlers: Handler[]): void
-      delete(path: string | Handler, ...handlers: Handler[]): void
-      head(path: string | Handler, ...handlers: Handler[]): void
-      options(path: string | Handler, ...handlers: Handler[]): void
-      trace(path: string | Handler, ...handlers: Handler[]): void
-      patch(path: string | Handler, ...handlers: Handler[]): void
-      all(path: string | Handler, ...handlers: Handler[]): void
-      private METHOD(method: string, path: string | Handler, handlers: Handler[]): void
+      get(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      post(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      put(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      delete(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      head(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      options(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      trace(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      patch(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      all(path: string | Handler, ...handlers: Array<Handler | Promise<Handler>>): void
+      private METHOD(method: string, path: string | Handler, handlers: Array<Handler | Promise<Handler>>): void
       onerror(handler: ErrorHandler): void
       toJSON(): object
     }
