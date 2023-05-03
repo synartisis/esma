@@ -12,7 +12,7 @@ export namespace esma {
     params?: object
     query?: object
     _body?: object
-    body: Promise<object>
+    body: Promise<Record<string, unknown>>
   }
 
   type Response = http.ServerResponse & {
