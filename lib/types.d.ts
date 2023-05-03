@@ -37,7 +37,7 @@ export namespace esma {
   type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => Promise<object> | void
   type Handler = Router | FunctionHandler
 
-  type StaticFileHandler = (html: string, filename: string, context: {}) => string
+  type StaticFileHandler = (html: string, filename: string, context: unknown) => Promise<string>
 
   type MiddlewareSignature = (path: string | Handler, ...handlers: Array<Handler>) => void
 
@@ -82,13 +82,15 @@ export namespace esma {
   }
 
   type StaticOptions = {
-    dotfiles: string,
+    dotfiles: 'deny' | 'ignore',
     etag: boolean,
     extensions: string[],
     index: string,
     lastModified: boolean,
     maxAge: number,
     redirect: boolean,
+    cacheBusting: boolean,
+    parsers: Record<string, StaticFileHandler | StaticFileHandler[]>,
   }
  
 }

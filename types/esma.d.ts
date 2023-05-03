@@ -38,9 +38,9 @@ export namespace esma {
 /**
  * serve static files
  * @param {string} root the directory to serve
- * @param {esma.StaticOptions} options serve static options
+ * @param {Partial<esma.StaticOptions>} options serve static options
  * @returns {esma.FunctionHandler}
  * @example server.use(esma.static(__dirname + '../client', { extensions: ['html'] }))
  */
-declare function serveStatic(root: string, options: esma.StaticOptions): esma.FunctionHandler;
+declare function serveStatic(root: string, options: Partial<esma.StaticOptions>): esma.FunctionHandler;
 export { serveStatic as static, _static as static, router as Router };
