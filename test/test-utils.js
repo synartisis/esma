@@ -1,4 +1,4 @@
-import esma, { router } from '../lib/esma.js'
+import * as esma from '../lib/esma.js'
 import * as http from 'node:http'
 export { config, settings } from '../lib/esma-settings.js'
 
@@ -18,7 +18,7 @@ export function getServer() {
 }
 
 export function getSubrouter() {
-  return router()
+  return esma.router()
 }
 
 export async function get(url) {

@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import * as utils from './test-utils.js'
-import esma from '../lib/esma.js'
+import * as esma from '../lib/esma.js'
 import fs from 'node:fs/promises'
 
 const server = utils.getServer()

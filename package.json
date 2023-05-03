@@ -3,11 +3,17 @@
   "version": "0.4.0",
   "description": "",
   "type": "module",
-  "main": "./lib/esma.js",
-  "exports": "./lib/esma.js",
-  "types": "./lib/esma.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/esma.js",
+      "default": "./lib/esma.js"
+    }
+  },
   "scripts": {
-    "test": "mocha --require test/hooks.js"
+    "types:check": "tsc -p tsconfig.json",
+    "types:declarations": "cp lib/types.d.ts types/ && tsc -p tsconfig.declarations.json",
+    "test": "mocha --require test/hooks.js",
+    "preversion": "npm run types:check && npm run types:declarations && npm test"
   },
   "files": [
     "lib/",
@@ -26,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/synartisis/esma/issues"
   },
-  "homepage": "https://github.com/synartisis/esma#readme"
+  "homepage": "https://github.com/synartisis/esma#readme",
+  "devDependencies": {
+    "@types/node": "^18.16.3"
+  }
 }
