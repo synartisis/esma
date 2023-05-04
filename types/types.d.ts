@@ -9,10 +9,11 @@ export namespace esma {
     originalUrl: string
     url: string
     baseUrl: string
-    params?: object
-    query?: object
-    _body?: object
-    body: Promise<Record<string, unknown>>
+    params: Record<string, string | undefined>
+    query: Record<string, string | undefined>
+    _body?: any
+    body: Promise<any>
+    session: any
   }
 
   type Response = http.ServerResponse & {
@@ -20,6 +21,14 @@ export namespace esma {
     locals: any
     send: (body: any) => void
     redirect: (loc: string) => void
+  }
+
+  type MiddlewareResultObject = {
+    $statusCode?: number
+    $headers?: Record<string, string>
+    $body?: any
+    $error?: any
+    [key: string]: any
   }
 
   type Server = http.Server & Router
@@ -33,13 +42,13 @@ export namespace esma {
     applyHandlers(req: Request, res: Response, ctx: any): Promise<void | object>
   }
 
-  type FunctionHandler = (req: Request, res: Response, next?: Function) => Promise<any> | void
-  type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => Promise<object> | void
+  type FunctionHandler = (req: Request, res: Response, next?: Function) => MiddlewareResultObject | void | string | Promise<MiddlewareResultObject | void | string>
+  type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => ReturnType<MiddlewareSignature>
   type Handler = Router | FunctionHandler
 
   type StaticFileHandler = (html: string, filename: string, context: unknown) => Promise<string>
 
-  type MiddlewareSignature = (path: string | Handler, ...handlers: Array<Handler>) => void
+  type MiddlewareSignature = (path: string | Handler, ...handlers: Array<Handler>) => MiddlewareResultObject | void | string | Promise<MiddlewareResultObject | void | string>
 
   type Router = {
     type: 'router'

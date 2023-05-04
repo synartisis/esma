@@ -1,3 +1,6 @@
+/** @typedef {import('./types.js').esma.Request} esma.Request */
+/** @typedef {import('./types.js').esma.Response} esma.Response */
+/** @typedef {import('./types.js').esma.MiddlewareResultObject} esma.MiddlewareResultObject */
 /** @typedef {import('./types.js').esma.Server} esma.Server */
 /** @typedef {import('./types.js').esma.Router} esma.Router */
 /** @typedef {import('./types.js').esma.FunctionHandler} esma.FunctionHandler */
@@ -29,6 +32,9 @@ export function router(): esma.Router;
  */
 export function multilingual(languages: string[]): import("./types.js").esma.Handler;
 export namespace esma {
+    type Request = import('./types.js').esma.Request;
+    type Response = import('./types.js').esma.Response;
+    type MiddlewareResultObject = import('./types.js').esma.MiddlewareResultObject;
     type Server = import('./types.js').esma.Server;
     type Router = import('./types.js').esma.Router;
     type FunctionHandler = import('./types.js').esma.FunctionHandler;
