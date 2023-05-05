@@ -1,6 +1,6 @@
 import type * as http from 'node:http'
 
-type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch' | 'all'
+export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
 
 type Server = http.Server & Router
 
@@ -8,7 +8,7 @@ export type Router = {
   use: (path: string | Middleware | Router, ...handlers: Array<Middleware | Router>) => void
   onerror(handler: ErrorHandler): void
 } & {
-  [method in HttpMethods]: (path: string | Middleware, ...handlers: Array<Middleware>) => void
+  [method in HttpMethods | 'all']: (path: string | Middleware, ...handlers: Array<Middleware>) => void
 }
 
 export type Middleware = (req: Request, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>

@@ -1,12 +1,13 @@
 import type * as public from './types.d.ts'
 
 
-type RouterObject = public.Router & {
+type RouterObject = Omit<public.Router, 'use'> & {
   type: 'router'
   mountpath: string
   middleware: MiddlewareEntry[]
+  use: (path: string | public.Middleware | RouterObject, ...handlers: Array<public.Middleware | RouterObject>) => void
   handleRequest(req: public.Request, res: public.Response, ctx: unknown): Promise<unknown>
-  _method(method: string, path: string | public.Middleware | public.Router, handlers: Array<public.Middleware | RouterObject>): void
+  _method(method: string, path: string | public.Middleware | RouterObject, handlers: Array<public.Middleware | RouterObject>): void
   toJSON(): object
 }
 
