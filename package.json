@@ -5,19 +5,18 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./types/esma.js",
+      "types": "./lib/types.js",
       "default": "./lib/esma.js"
-    }
+    },
+    "./private": "./lib/private.d.ts"
   },
   "scripts": {
     "types:check": "tsc -p tsconfig.json",
-    "types:declarations": "cp lib/types.d.ts types/ && tsc -p tsconfig.declarations.json",
     "test": "mocha --require test/hooks.js",
-    "preversion": "npm run types:check && npm run types:declarations && npm test"
+    "preversion": "npm run types:check && npm test"
   },
   "files": [
     "lib/",
-    "types/",
     "readme.md"
   ],
   "engines": {
