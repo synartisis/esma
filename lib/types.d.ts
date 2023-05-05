@@ -28,8 +28,7 @@ export type Request = http.IncomingMessage & {
   baseUrl: string
   params: Record<string, string | undefined>
   query: Record<string, string | undefined>
-  _body?: any
-  body: Promise<any>
+  body: any
   session: any
   [key: string]: any
 }
