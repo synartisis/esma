@@ -21,7 +21,7 @@ type MiddlewareResult = {
   [key: string]: MiddlewareResultValueType
 } | MiddlewareResultValueType
 
-type MiddlewareResultValueType = string | number | Date | any[] | Record<string, string> | Buffer | void
+type MiddlewareResultValueType = string | number | Date | Record<string, unknown> | Record<string, unknown>[] | Buffer | void
 
 export type Request = http.IncomingMessage & {
   originalUrl: string
