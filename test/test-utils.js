@@ -21,6 +21,7 @@ export function getSubrouter() {
   return esma.router()
 }
 
+/** @type {(url: string) => Promise<{statusCode: number, headers: Record<string, string>, body: string>}>} */
 export async function get(url) {
   return new Promise((resolve, reject) => {
     http.request(`http://localhost:3333${url}`, res => {

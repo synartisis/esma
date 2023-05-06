@@ -12,15 +12,15 @@ export type Router = {
 }
 
 export type Middleware = (req: Request, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
-export type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => MiddlewareResult
+export type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
 
 type MiddlewareResult = {
   $statusCode?: number
   $headers?: Record<string, string>
   $body?: any
-  $error?: any
-  [key: string]: any
-} | void | string
+} & {
+  [key: string]: string | number | Date | any[]
+} | void | string | number | Date | any[]
 
 export type Request = http.IncomingMessage & {
   originalUrl: string

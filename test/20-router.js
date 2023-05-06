@@ -30,7 +30,7 @@ describe('router - use', () => {
     const res2 = await utils.get('/route3-path')
     assert.equal(res0.body, 'route3 result')
     assert.equal(res1.body, 'route3 result')
-    assert.equal(res2.statusCode, '404')
+    assert.equal(res2.statusCode, 404)
   })
 
   it('should change path to / if it is missing', async () => {
