@@ -18,9 +18,10 @@ type MiddlewareResult = {
   $statusCode?: number
   $headers?: Record<string, string>
   $body?: any
-} & {
-  [key: string]: string | number | Date | any[]
-} | void | string | number | Date | any[]
+  [key: string]: MiddlewareResultValueType
+} | MiddlewareResultValueType
+
+type MiddlewareResultValueType = string | number | Date | any[] | Record<string, string> | Buffer | void
 
 export type Request = http.IncomingMessage & {
   originalUrl: string
@@ -29,7 +30,7 @@ export type Request = http.IncomingMessage & {
   params: Record<string, string | undefined>
   query: Record<string, string | undefined>
   body: any
-  session: any
+  session?: Session
   [key: string]: any
 }
 
@@ -54,6 +55,13 @@ export type StaticOptions = {
 
 export type StaticFileHandler = (html: string, filename: string, context: unknown) => Promise<string>
 
+export type Session = {
+  sessionId: string
+  username: string
+  roles: string[]
+  bag: Record<string, string>
+}
+
 export type Settings = {
   /** runtime environment: e.x. 'development', 'production' etc */
   env: 'dev' | string
@@ -61,6 +69,8 @@ export type Settings = {
   etag: 'weak' | 'strong'
   /** default limit to the request body size in bytes */
   bodyParserLimit: number
+  /** cookie name used for esma session */
+  sessionCookieName: string
 }
 
 
@@ -97,7 +107,7 @@ export { router as Router }
  * @param userSettings configuration settings
  * @example esma.config({ env: 'production', etag: 'weak', bodyParserLimit: 10_000 })
  */
-export function config(userSettings: Partial<Settings>): Middleware
+export function config(userSettings: Partial<Settings>): void
 
 
 /**
@@ -106,3 +116,33 @@ export function config(userSettings: Partial<Settings>): Middleware
  * @example server.use(esma.multilingual(['en', 'fr']))
  */
 export function multilingual(languages: string[]): Middleware
+
+
+/**
+ * esma authorization
+ * @param allowedRoles user must have at least one of these roles to be authorized
+ * @example server.use(esma.authorize(['admin']))
+ */
+export function authorize(allowedRoles: string[]): Middleware
+
+
+/**
+ * user login
+ * @param username the username
+ * @param roles roles assigned to user
+ * @param bag custom data to attach to user session
+ * @example
+ * server.post('/login', (req, res) => {
+ *   const { username } = req.body
+ *   const roles = getRolesForUser(username)
+ *   esma.login(username, roles)(req, res)
+ * })
+ */
+export function login(username: string, roles: string[], bag?: Record<string, string>): Middleware
+
+
+/**
+ * logout current user
+ * @example server.get('/logout', esma.logout())
+ */
+export function logout(): Middleware
