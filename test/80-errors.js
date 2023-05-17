@@ -17,11 +17,11 @@ describe('error handling', () => {
     const res2 = await utils.get('/err/error-function')
     const res3 = await utils.get('/err/error-constractor')
     assert.equal(res1.statusCode, 500)
-    assert.equal(res1.body.split('\n')[0], `HTTP Error 500: ${errorMessage}`)
+    assert.equal(res1.body.split('\n')[0], `HTTP 500 - ${errorMessage}`)
     assert.equal(res2.statusCode, 500)
-    assert.equal(res2.body.split('\n')[0], `HTTP Error 500: Error: ${errorMessage}`)
+    assert.equal(res2.body.split('\n')[0], `HTTP 500 - Error: ${errorMessage}`)
     assert.equal(res3.statusCode, 500)
-    assert.equal(res3.body.split('\n')[0], `HTTP Error 500: Error: ${errorMessage}`)
+    assert.equal(res3.body.split('\n')[0], `HTTP 500 - Error: ${errorMessage}`)
   })
 
   it('should use error handlers', async () => {
@@ -30,7 +30,7 @@ describe('error handling', () => {
     })
     const res = await utils.get('/err/error-constractor')
     assert.equal(res.statusCode, 500)
-    assert.equal(res.body.split('\n')[0], `HTTP Error 500: Error: ${errorMessage}`)
+    assert.equal(res.body.split('\n')[0], `HTTP 500 - Error: ${errorMessage}`)
   })
 
   it('should accept express-like error middleware', async () => {
@@ -42,7 +42,7 @@ describe('error handling', () => {
     })
     const res = await utils.get('/error-express/test')
     assert.equal(res.statusCode, 500)
-    assert.equal(res.body.split('\n')[0], `HTTP Error 500: Error: express-error`)
+    assert.equal(res.body.split('\n')[0], `HTTP 500 - Error: express-error`)
   })
 
 })

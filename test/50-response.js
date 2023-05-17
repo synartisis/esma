@@ -68,9 +68,9 @@ describe('response object - response types', () => {
   })
 
   it('undefined', async () => {
-    const expected = 'HTTP Error 404: Cannot GET /response/undefined'
+    const expected = 'HTTP 404 - Cannot GET /response/undefined'
     let res = await utils.get('/response/undefined')
-    assert.equal(await res.body, expected)
+    assert.equal(res.body, expected)
     assert.equal(res.headers['content-length'], expected.length)
     assert.equal(res.statusCode, '404')
   })
@@ -101,7 +101,7 @@ describe('response object - errors', () => {
   it('handle error', async () => {
     let res = await utils.get('/builtin-error')
     assert.equal(res.statusCode, '500')
-    assert.equal(res.body.split('\n')[0], 'HTTP Error 500: Error: *error message*')
+    assert.equal(res.body.split('\n')[0], 'HTTP 500 - Error: *error message*')
   })
 
 })
