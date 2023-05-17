@@ -1,5 +1,8 @@
-import assert from 'node:assert'
+import { describe, it, after } from 'node:test'
+import * as assert from 'node:assert'
 import * as utils from './test-utils.js'
+import * as esma from '../lib/esma.js'
+const port = 30050
 
 const DATA = {
   html: '<b>this is the body</b>',
@@ -8,7 +11,7 @@ const DATA = {
   array: [1, 2, 3]
 }
 
-const server = utils.getServer()
+const server = esma.createServer().listen(port)
 server.get('/response/:type', async req => {
   const { type } = req.params
   let body
@@ -34,45 +37,45 @@ server.get('/builtin-error', async req => {
 describe('response object - response types', () => {
 
   it('html', async () => {
-    let res = await utils.get('/response/html')
-    assert.equal(res.headers['content-type'], 'text/html; charset=utf-8')
-    assert.equal(res.headers['content-length'], Buffer.from(DATA.html).byteLength)
-    assert.equal(res.body, DATA.html)
+    let res = await utils.get(port, '/response/html')
+    assert.strictEqual(res.headers['content-type'], 'text/html; charset=utf-8')
+    assert.strictEqual(Number(res.headers['content-length']), Buffer.from(DATA.html).byteLength)
+    assert.strictEqual(res.body, DATA.html)
   })
 
   it('buffer', async () => {
-    let res = await utils.get('/response/buffer')
-    assert.equal(res.headers['content-type'], 'application/octet-stream')
-    assert.equal(res.headers['content-length'], Buffer.from(DATA.buffer).byteLength)
-    assert.equal(res.body, DATA.buffer)
+    let res = await utils.get(port, '/response/buffer')
+    assert.strictEqual(res.headers['content-type'], 'application/octet-stream')
+    assert.strictEqual(Number(res.headers['content-length']), Buffer.from(DATA.buffer).byteLength)
+    assert.strictEqual(res.body, DATA.buffer)
   })
 
   it('object', async () => {
-    let res = await utils.get('/response/object')
-    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
-    assert.equal(res.headers['content-length'], Buffer.from(JSON.stringify(DATA.object)).byteLength)
-    assert.equal(res.body, JSON.stringify(DATA.object))
+    let res = await utils.get(port, '/response/object')
+    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8')
+    assert.strictEqual(Number(res.headers['content-length']), Buffer.from(JSON.stringify(DATA.object)).byteLength)
+    assert.strictEqual(res.body, JSON.stringify(DATA.object))
   })
 
   it('array', async () => {
-    let res = await utils.get('/response/array')
-    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
-    assert.equal(res.headers['content-length'], Buffer.from(JSON.stringify(DATA.array)).byteLength)
-    assert.equal(res.body, JSON.stringify(DATA.array))
+    let res = await utils.get(port, '/response/array')
+    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8')
+    assert.strictEqual(Number(res.headers['content-length']), Buffer.from(JSON.stringify(DATA.array)).byteLength)
+    assert.strictEqual(res.body, JSON.stringify(DATA.array))
   })
 
   it('null', async () => {
-    let res = await utils.get('/response/null')
-    assert.equal(res.headers['content-length'], 0)
-    assert.equal(res.body, '')
+    let res = await utils.get(port, '/response/null')
+    assert.strictEqual(Number(res.headers['content-length']), 0)
+    assert.strictEqual(res.body, '')
   })
 
   it('undefined', async () => {
     const expected = 'HTTP 404 - Cannot GET /response/undefined'
-    let res = await utils.get('/response/undefined')
-    assert.equal(res.body, expected)
-    assert.equal(res.headers['content-length'], expected.length)
-    assert.equal(res.statusCode, '404')
+    let res = await utils.get(port, '/response/undefined')
+    assert.strictEqual(res.body, expected)
+    assert.strictEqual(Number(res.headers['content-length']), expected.length)
+    assert.strictEqual(res.statusCode, 404)
   })
 
 })
@@ -80,18 +83,18 @@ describe('response object - response types', () => {
 describe('response object - built-in properties', () => {
 
   it('$statusCode', async () => {
-    let res = await utils.get('/builtin')
-    assert.equal(res.statusCode, '202')
+    let res = await utils.get(port, '/builtin')
+    assert.strictEqual(res.statusCode, 202)
   })
 
   it('$headers', async () => {
-    let res = await utils.get('/builtin')
-    assert.equal(res.headers['x-type'], 'test')
+    let res = await utils.get(port, '/builtin')
+    assert.strictEqual(res.headers['x-type'], 'test')
   })
 
   it('$body', async () => {
-    let res = await utils.get('/builtin')
-    assert.equal(res.body, 'body content')
+    let res = await utils.get(port, '/builtin')
+    assert.strictEqual(res.body, 'body content')
   })
 
 })
@@ -99,9 +102,13 @@ describe('response object - built-in properties', () => {
 describe('response object - errors', () => {
 
   it('handle error', async () => {
-    let res = await utils.get('/builtin-error')
-    assert.equal(res.statusCode, '500')
-    assert.equal(res.body.split('\n')[0], 'HTTP 500 - Error: *error message*')
+    let res = await utils.get(port, '/builtin-error')
+    assert.strictEqual(res.statusCode, 500)
+    assert.strictEqual(res.body.split('\n')[0], 'HTTP 500 - Error: *error message*')
+  })
+
+  after(() => {
+    server.close()
   })
 
 })
