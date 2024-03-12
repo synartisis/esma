@@ -14,7 +14,7 @@ export type Router = {
 export type Middleware = (req: Request, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
 export type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
 
-type MiddlewareResult = {
+export type MiddlewareResult = {
   $statusCode?: number
   $headers?: Record<string, string>
   $body?: any
