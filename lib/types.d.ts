@@ -71,6 +71,8 @@ export type Settings = {
   bodyParserLimit: number
   /** cookie name used for esma session */
   sessionCookieName: string
+  /** automaticaly redirect 401 errors */
+  authorizationUrl: string
 }
 
 
