@@ -1,107 +1,5 @@
 import type * as http from 'node:http'
 
-export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
-
-export type Server<TSessionBag> = http.Server & Router<TSessionBag>
-
-export type Router<TSessionBag> = {
-  use: (path: string | Middleware<TSessionBag> | Router<TSessionBag>, ...handlers: Array<Middleware<TSessionBag> | Router<TSessionBag>>) => void
-  onerror(handler: ErrorHandler): void
-  all: (path: string, handler: Middleware<TSessionBag>) => void
-} & {
-  [method in HttpMethods]: (path: string, ...handlers: Middleware<TSessionBag>[]) => void
-    // | (...handlers: Middleware<TSessionBag>[]) => void
-}
-
-export type Middleware<TSessionBag> = (req: Request<TSessionBag>, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
-export type ErrorHandler = (err: Error, req: Request<unknown>, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
-
-export type MiddlewareResult = {
-  $statusCode?: number
-  $headers?: Record<string, string>
-  $body?: any
-  [key: string]: MiddlewareResultValueType
-} | MiddlewareResultValueType
-
-type MiddlewareResultValueType = string | number | Date | Record<string, unknown> | Record<string, unknown>[] | number[] | Buffer | null | void
-
-// export type Request<TSessionBag> = esma.Request<TSessionBag>
-export type Request<TSessionBag> = http.IncomingMessage & {
-  originalUrl: string
-  url: string
-  baseUrl: string
-  params: Record<string, string | undefined>
-  query: Record<string, string | undefined>
-  body: any
-  session: Session<TSessionBag>
-  [key: string]: any
-}
-
-export type Response = http.ServerResponse & {
-  writableEnded: boolean
-  locals: any
-  send: (body: any) => void
-  redirect: (loc: string) => void
-}
-
-export type StaticOptions = {
-  dotfiles: 'deny' | 'ignore',
-  etag: boolean,
-  extensions: string[],
-  index: string,
-  lastModified: boolean,
-  maxAge: number,
-  redirect: boolean,
-  cacheBusting: boolean,
-  parsers: Record<string, StaticFileHandler | StaticFileHandler[]>,
-}
-
-export type StaticFileHandler = (html: string, filename: string, context: unknown) => Promise<string>
-
-export type Session<TSessionBag> = {
-  readonly isLoggedOn: true
-  logout(): void
-} & SessionData<TSessionBag> | {
-  readonly isLoggedOn: false
-  login(username: string, roles: string[], bag?: TSessionBag): void
-}
-
-export type SessionData<TSessionBag> = {
-  sessionId: string
-  username: string
-  roles: string[]
-  bag: TSessionBag
-}
-
-// export type Session<TSessionBag> = esma.Session<TSessionBag>
-// export type SessionData<TSessionBag> = esma.SessionData<TSessionBag>
-// export type Session<TSessionBag> = {
-//   readonly isLoggedOn: true
-//   logout(): void
-//   // sessionId: string
-//   // username: string
-//   // roles: string[]
-//   // bag: TSessionBag
-// } & SessionData<TSessionBag> | {
-//   readonly isLoggedOn: false
-//   login(username: string, roles: string[], bag?: TSessionBag): void
-// }
-
-
-
-export type Settings = {
-  /** runtime environment: e.x. 'development', 'production' etc */
-  env: 'dev' | string
-  /** ETag HTTP response header validator mode: 'weak' | 'strong' */
-  etag: 'weak' | 'strong'
-  /** default limit to the request body size in bytes */
-  bodyParserLimit: number
-  /** cookie name used for esma session */
-  sessionCookieName: string
-  /** automaticaly redirect 401 errors */
-  authorizationUrl: string
-}
-
 
 /**
  * creates an esma server instance
@@ -117,7 +15,7 @@ export function createServer<TSessionBag>(): Server<TSessionBag>;
  * @param options serve static options
  * @example server.use(esma.static(__dirname + '../client', { extensions: ['html'] }))
  */
-export function static(root: string, options: Partial<StaticOptions>): Middleware<unknown>
+export function static(root: string, options: Partial<StaticOptions>): Handler<unknown>
 
 
 /**
@@ -144,7 +42,7 @@ export function config(userSettings: Partial<Settings>): void
  * @param languages supported languages
  * @example server.use(esma.multilingual(['en', 'fr']))
  */
-export function multilingual(languages: string[]): Middleware<unknown>
+export function multilingual(languages: string[]): Handler<unknown>
 
 
 /**
@@ -152,26 +50,91 @@ export function multilingual(languages: string[]): Middleware<unknown>
  * @param allowedRoles user must have at least one of these roles to be authorized
  * @example server.use(esma.authorize(['admin']))
  */
-export function authorize(allowedRoles: string[]): Middleware<unknown>
+export function authorize(allowedRoles: string[]): Handler<unknown>
 
 
-/**
- * user login
- * @param username the username
- * @param roles roles assigned to user
- * @param bag custom data to attach to user session
- * @example
- * server.post('/login', (req, res) => {
- *   const { username } = req.body
- *   const roles = getRolesForUser(username)
- *   esma.login(username, roles)(req, res)
- * })
- */
-export function login(username: string, roles: string[], bag?: Record<string, string>): Middleware<unknown>
 
 
-/**
- * logout current user
- * @example server.get('/logout', esma.logout())
- */
-export function logout(): Middleware<unknown>
+export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
+
+export type Server<TSessionBag> = http.Server & Router<TSessionBag>
+
+export type Router<TSessionBag> = {
+  use: (pathOrHandler: string | Handler<TSessionBag>, ...handlers: Handler<TSessionBag>[]) => void
+  onerror(handler: ErrorHandler): void
+  all: (path: string, handler: Handler<TSessionBag>) => void
+} & {
+  [method in HttpMethods]: (pathOrHandler: string | Handler<TSessionBag>, ...handlers: Handler<TSessionBag>[]) => void
+    // | (...handlers: Middleware<TSessionBag>[]) => void
+}
+
+export type Request<TSessionBag = unknown> = http.IncomingMessage & {
+  originalUrl: string
+  url: string
+  baseUrl: string
+  params: Record<string, string>
+  query: Record<string, string>
+  body: unknown // any
+  session: Session<TSessionBag>
+  // [key: string]: any
+}
+
+export type Response = http.ServerResponse & {
+  writableEnded: boolean
+  locals: any
+  send: (body: any) => void
+  redirect: (loc: string) => void
+}
+
+export type FunctionHandler<TSessionBag, TResult extends HandlerResultValue> = (req: Request<TSessionBag>, res: Response, next?: Function) => HandlerResult<TResult>
+export type ErrorHandler = (err: Error, req: Request<unknown>, res: Response, next?: Function) => unknown
+export type Handler<TSessionBag, TResult extends HandlerResultValue = any> = FunctionHandler<TSessionBag, TResult>
+export type HandlerResult<TResult extends HandlerResultValue> = {
+  $statusCode?: number
+  $headers?: Record<string, string>
+  $body: TResult
+} | TResult
+export type HandlerResultValue = string | number | Date | Record<string, unknown> | Record<string, unknown>[] | number[] | Buffer | null | void | unknown
+
+export type Session<TSessionBag> = {
+  readonly isLoggedOn: true
+  logout(): void
+} & SessionData<TSessionBag> | {
+  readonly isLoggedOn: false
+  login(username: string, roles: string[], bag?: TSessionBag): void
+}
+
+export type SessionData<TSessionBag> = {
+  sessionId: string
+  username: string
+  roles: string[]
+  bag: TSessionBag
+}
+
+export type StaticOptions = {
+  dotfiles: 'deny' | 'ignore',
+  etag: boolean,
+  extensions: string[],
+  index: string,
+  lastModified: boolean,
+  maxAge: number,
+  redirect: boolean,
+  cacheBusting: boolean,
+  parsers: Record<string, StaticFileHandler | StaticFileHandler[]>,
+}
+
+export type StaticFileHandler = (html: string, filename: string, context: unknown) => Promise<string>
+
+
+export type Settings = {
+  /** runtime environment: e.x. 'development', 'production' etc */
+  env: 'dev' | string
+  /** ETag HTTP response header validator mode: 'weak' | 'strong' */
+  etag: 'weak' | 'strong'
+  /** default limit to the request body size in bytes */
+  bodyParserLimit: number
+  /** cookie name used for esma session */
+  sessionCookieName: string
+  /** automaticaly redirect 401 errors */
+  authorizationUrl: string
+}
