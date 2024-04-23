@@ -2,17 +2,19 @@ import type * as http from 'node:http'
 
 export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
 
-type Server = http.Server & Router
+export type Server<TSessionBag> = http.Server & Router<TSessionBag>
 
-export type Router = {
-  use: (path: string | Middleware | Router, ...handlers: Array<Middleware | Router>) => void
+export type Router<TSessionBag> = {
+  use: (path: string | Middleware<TSessionBag> | Router<TSessionBag>, ...handlers: Array<Middleware<TSessionBag> | Router<TSessionBag>>) => void
   onerror(handler: ErrorHandler): void
+  all: (path: string, handler: Middleware<TSessionBag>) => void
 } & {
-  [method in HttpMethods | 'all']: (path: string | Middleware, ...handlers: Array<Middleware>) => void
+  [method in HttpMethods]: (path: string, ...handlers: Middleware<TSessionBag>[]) => void
+    // | (...handlers: Middleware<TSessionBag>[]) => void
 }
 
-export type Middleware = (req: Request, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
-export type ErrorHandler = (err: Error, req: Request, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
+export type Middleware<TSessionBag> = (req: Request<TSessionBag>, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
+export type ErrorHandler = (err: Error, req: Request<unknown>, res: Response, next?: Function) => MiddlewareResult | Promise<MiddlewareResult>
 
 export type MiddlewareResult = {
   $statusCode?: number
@@ -23,14 +25,15 @@ export type MiddlewareResult = {
 
 type MiddlewareResultValueType = string | number | Date | Record<string, unknown> | Record<string, unknown>[] | number[] | Buffer | null | void
 
-export type Request = http.IncomingMessage & {
+// export type Request<TSessionBag> = esma.Request<TSessionBag>
+export type Request<TSessionBag> = http.IncomingMessage & {
   originalUrl: string
   url: string
   baseUrl: string
   params: Record<string, string | undefined>
   query: Record<string, string | undefined>
   body: any
-  session?: Session
+  session: Session<TSessionBag>
   [key: string]: any
 }
 
@@ -55,12 +58,36 @@ export type StaticOptions = {
 
 export type StaticFileHandler = (html: string, filename: string, context: unknown) => Promise<string>
 
-export type Session = {
+export type Session<TSessionBag> = {
+  readonly isLoggedOn: true
+  logout(): void
+} & SessionData<TSessionBag> | {
+  readonly isLoggedOn: false
+  login(username: string, roles: string[], bag?: TSessionBag): void
+}
+
+export type SessionData<TSessionBag> = {
   sessionId: string
   username: string
   roles: string[]
-  bag: Record<string, string>
+  bag: TSessionBag
 }
+
+// export type Session<TSessionBag> = esma.Session<TSessionBag>
+// export type SessionData<TSessionBag> = esma.SessionData<TSessionBag>
+// export type Session<TSessionBag> = {
+//   readonly isLoggedOn: true
+//   logout(): void
+//   // sessionId: string
+//   // username: string
+//   // roles: string[]
+//   // bag: TSessionBag
+// } & SessionData<TSessionBag> | {
+//   readonly isLoggedOn: false
+//   login(username: string, roles: string[], bag?: TSessionBag): void
+// }
+
+
 
 export type Settings = {
   /** runtime environment: e.x. 'development', 'production' etc */
@@ -78,10 +105,10 @@ export type Settings = {
 
 /**
  * creates an esma server instance
- * @return {esma.Server}
+ * @return {Server}
  * @example const server = esma.createServer()
  * */
-export function createServer(): Server;
+export function createServer<TSessionBag>(): Server<TSessionBag>;
 
 
 /**
@@ -90,7 +117,7 @@ export function createServer(): Server;
  * @param options serve static options
  * @example server.use(esma.static(__dirname + '../client', { extensions: ['html'] }))
  */
-export function static(root: string, options: Partial<StaticOptions>): Middleware
+export function static(root: string, options: Partial<StaticOptions>): Middleware<unknown>
 
 
 /**
@@ -100,7 +127,7 @@ export function static(root: string, options: Partial<StaticOptions>): Middlewar
  * const r = router()
  * r.get(...)
  */
-export function router(): Router
+export function router<TSessionBag>(): Router<TSessionBag>
 export { router as Router }
 
 
@@ -117,7 +144,7 @@ export function config(userSettings: Partial<Settings>): void
  * @param languages supported languages
  * @example server.use(esma.multilingual(['en', 'fr']))
  */
-export function multilingual(languages: string[]): Middleware
+export function multilingual(languages: string[]): Middleware<unknown>
 
 
 /**
@@ -125,7 +152,7 @@ export function multilingual(languages: string[]): Middleware
  * @param allowedRoles user must have at least one of these roles to be authorized
  * @example server.use(esma.authorize(['admin']))
  */
-export function authorize(allowedRoles: string[]): Middleware
+export function authorize(allowedRoles: string[]): Middleware<unknown>
 
 
 /**
@@ -140,11 +167,11 @@ export function authorize(allowedRoles: string[]): Middleware
  *   esma.login(username, roles)(req, res)
  * })
  */
-export function login(username: string, roles: string[], bag?: Record<string, string>): Middleware
+export function login(username: string, roles: string[], bag?: Record<string, string>): Middleware<unknown>
 
 
 /**
  * logout current user
  * @example server.get('/logout', esma.logout())
  */
-export function logout(): Middleware
+export function logout(): Middleware<unknown>
