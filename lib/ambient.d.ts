@@ -18,7 +18,7 @@ declare global {
     type FunctionHandler<TSessionBag = unknown> = types.FunctionHandler<TSessionBag, any>
     type ErrorHandler = types.ErrorHandler
     type Handler<TSessionBag = unknown> = FunctionHandler<TSessionBag> | RouterObject
-    type HandlerResult = types.HandlerResult<unknown>
+    type HandlerResult = types.HandlerResult<types.HandlerResultValue>
 
 
     // type FunctionHandler<TSessionBag> = (req: Request<TSessionBag>, res: Response, next?: Function) => HandlerResult
@@ -48,7 +48,7 @@ declare global {
       onerror(handler: ErrorHandler): void
       toJSON(): object
     } & {
-      [method in HttpMethods | 'all']: (path: string, handlers: Handler[]) => void
+      [method in HttpMethods | 'all']: (path: string, ...handlers: Handler[]) => void
     }
     
     type MiddlewareEntry = {

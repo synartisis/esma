@@ -15,7 +15,7 @@ export function createServer<TSessionBag>(): Server<TSessionBag>;
  * @param options serve static options
  * @example server.use(esma.static(__dirname + '../client', { extensions: ['html'] }))
  */
-export function static(root: string, options: Partial<StaticOptions>): Handler<unknown>
+export function static(root: string, options: Partial<StaticOptions>): Handler<any, HandlerResult<HandlerResultValue>>
 
 
 /**
@@ -42,7 +42,7 @@ export function config(userSettings: Partial<Settings>): void
  * @param languages supported languages
  * @example server.use(esma.multilingual(['en', 'fr']))
  */
-export function multilingual(languages: string[]): Handler<unknown>
+export function multilingual(languages: string[]): Handler<any, HandlerResult<HandlerResultValue>>
 
 
 /**
@@ -50,7 +50,7 @@ export function multilingual(languages: string[]): Handler<unknown>
  * @param allowedRoles user must have at least one of these roles to be authorized
  * @example server.use(esma.authorize(['admin']))
  */
-export function authorize(allowedRoles: string[]): Handler<unknown>
+export function authorize(allowedRoles: string[]): Handler<any, HandlerResult<HandlerResultValue>>
 
 
 
@@ -60,21 +60,19 @@ export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options'
 export type Server<TSessionBag> = http.Server & Router<TSessionBag>
 
 export type Router<TSessionBag> = {
-  use: (pathOrHandler: string | Handler<TSessionBag>, ...handlers: Handler<TSessionBag>[]) => void
+  use: (pathOrHandler: string | Handler<TSessionBag, HandlerResult<HandlerResultValue>>, ...handlers: Handler<TSessionBag, HandlerResult<HandlerResultValue>>[]) => void
   onerror(handler: ErrorHandler): void
-  all: (path: string, handler: Handler<TSessionBag>) => void
 } & {
-  [method in HttpMethods]: (pathOrHandler: string | Handler<TSessionBag>, ...handlers: Handler<TSessionBag>[]) => void
-    // | (...handlers: Middleware<TSessionBag>[]) => void
+  [method in HttpMethods | 'all']: (pathOrHandler: string | Handler<TSessionBag, HandlerResult<HandlerResultValue>>, ...handlers: Handler<TSessionBag, HandlerResult<HandlerResultValue>>[]) => void
 }
 
 export type Request<TSessionBag = unknown> = http.IncomingMessage & {
   originalUrl: string
   url: string
   baseUrl: string
-  params: Record<string, string>
-  query: Record<string, string>
-  body: unknown // any
+  params: Record<string, string | undefined>
+  query: Record<string, string | undefined>
+  body: any //Record<string, unknown> | string | Buffer// unknown // any
   session: Session<TSessionBag>
   // [key: string]: any
 }
@@ -86,23 +84,34 @@ export type Response = http.ServerResponse & {
   redirect: (loc: string) => void
 }
 
-export type FunctionHandler<TSessionBag, TResult extends HandlerResultValue> = (req: Request<TSessionBag>, res: Response, next?: Function) => HandlerResult<TResult>
+export type FunctionHandler<TSessionBag, TResult extends HandlerResult<HandlerResultValue>> = (req: Request<TSessionBag>, res: Response, next?: Function) => HandlerResult<TResult>
 export type ErrorHandler = (err: Error, req: Request<unknown>, res: Response, next?: Function) => unknown
-export type Handler<TSessionBag, TResult extends HandlerResultValue = any> = FunctionHandler<TSessionBag, TResult>
-export type HandlerResult<TResult extends HandlerResultValue> = {
+export type Handler<TSessionBag, TResult extends HandlerResult<HandlerResultValue>> = FunctionHandler<TSessionBag, TResult> | Router<TSessionBag>
+export type HandlerResult<TResult extends HandlerResultValue> = HandlerResultHttpObject<TResult> | TResult
+export type HandlerResultHttpObject<TResult extends HandlerResultValue> = {
   $statusCode?: number
   $headers?: Record<string, string>
   $body: TResult
-} | TResult
-export type HandlerResultValue = string | number | Date | Record<string, unknown> | Record<string, unknown>[] | number[] | Buffer | null | void | unknown
+}
+export type HandlerResultValue = string | number | Date | object | void //| Record<string, unknown> | Record<string, unknown>[] | number[] | Buffer | null | void// | unknown
 
 export type Session<TSessionBag> = {
   readonly isLoggedOn: true
+  login(username: string, roles: string[], bag?: TSessionBag): void
   logout(): void
 } & SessionData<TSessionBag> | {
   readonly isLoggedOn: false
   login(username: string, roles: string[], bag?: TSessionBag): void
+  logout(): void
 }
+
+// export type Session<TSessionBag> = {
+//   readonly isLoggedOn: true
+//   logout(): void
+// } & SessionData<TSessionBag> | {
+//   readonly isLoggedOn: false
+//   login(username: string, roles: string[], bag?: TSessionBag): void
+// }
 
 export type SessionData<TSessionBag> = {
   sessionId: string
