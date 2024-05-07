@@ -66,20 +66,23 @@ export type Router<TSessionBag> = {
   [method in HttpMethods | 'all']: (pathOrHandler: string | Handler<TSessionBag, HandlerResult<HandlerResultValue>>, ...handlers: Handler<TSessionBag, HandlerResult<HandlerResultValue>>[]) => void
 }
 
-export type Request<TSessionBag = unknown> = http.IncomingMessage & {
+export type Request<TSessionBag = unknown, TView = Record<string, unknown>> = http.IncomingMessage & {
   originalUrl: string
   url: string
   baseUrl: string
   params: Record<string, string | undefined>
   query: Record<string, string | undefined>
-  body: any //Record<string, unknown> | string | Buffer// unknown // any
+  body: any
+  view: TView
+  bag: Record<string, any>
   session: Session<TSessionBag>
-  // [key: string]: any
 }
 
-export type Response = http.ServerResponse & {
+export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
   writableEnded: boolean
   locals: any
+  view: TView
+  bag: Record<string, any>
   send: (body: any) => void
   redirect: (loc: string) => void
 }

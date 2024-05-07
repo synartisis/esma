@@ -43,7 +43,7 @@ declare global {
       mountpath: string
       middleware: MiddlewareEntry[]
       handleRequest(req: Request<unknown>, res: Response, ctx: Context): Promise<HandlerResult>
-      use: (path: string, ...handlers: Handler[]) => void
+      use: (pathOrHandler: string | Handler, ...handlers: Handler[]) => void
       _method(method: HttpMethods | 'all', path: string, handlers: Handler[]): void
       onerror(handler: ErrorHandler): void
       toJSON(): object
