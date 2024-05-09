@@ -78,7 +78,6 @@ export type Request<TSessionBag = Record<string, unknown>, TView = Record<string
 }
 
 export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
-  writableEnded: boolean
   locals: TView
   view: TView
   bag: Record<string, any>
