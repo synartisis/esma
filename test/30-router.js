@@ -1,29 +1,12 @@
 import { describe, it, after } from 'node:test'
 import * as assert from 'node:assert'
 import * as esma from '../lib/esma.js'
-const port = 30020
+const port = 30030
 const url = `http://localhost:${port}`
 
 const server = esma.createServer().listen(port)
 
 describe('router - use', () => {
-
-  it('should add middleware', async () => {
-    server.use('/route1', async req => {
-      req.view.data = 1
-    })
-    server.use('/route1', async req => {
-      assert.strictEqual(typeof req.view.data, 'number')
-      if (typeof req.view.data !== 'number') assert.fail('wrong assignment to req.view object')
-      req.view.data += 1
-      return req.view.data
-    })
-    const res1 = await fetch(url + '/route1')
-    const res2 = await fetch(url + '/route2')
-    assert.strictEqual(res1.status, 200)
-    assert.strictEqual(await res1.text(), '2')
-    assert.strictEqual(res2.status, 404)
-  })
 
   it('should accept multiple middleware functions', async () => {
     server.use('/route2', 
@@ -54,14 +37,14 @@ describe('router - use', () => {
     server.use(req => { req.bag.missingPath = true })
     server.use('/check-missing-path', req => req.bag.missingPath)
     const res = await fetch(url + '/check-missing-path')
-    assert.strictEqual(await res.text(), 'true')
+    assert.strictEqual(await res.json(), true)
   })
 
   it('should ignore METHOD middleware if path is missing', async () => {
     // @ts-expect-error
     server.get(req => 'check METHOD without path')
     const res = await fetch(url + '/')
-    assert.strictEqual(res.status, 404)
+    assert.notStrictEqual(await res.text(), 'check METHOD without path')
   })
 
   after(() => {

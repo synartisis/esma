@@ -63,13 +63,12 @@ export type Router<TSessionBag> = {
   use: (pathOrHandler: string | Handler<TSessionBag, HandlerResult<HandlerResultValue>>, ...handlers: Handler<TSessionBag, HandlerResult<HandlerResultValue>>[]) => void
   onerror(handler: ErrorHandler): void
 } & {
-  [method in HttpMethods | 'all']: (pathOrHandler: string | Handler<TSessionBag, HandlerResult<HandlerResultValue>>, ...handlers: Handler<TSessionBag, HandlerResult<HandlerResultValue>>[]) => void
+  [method in HttpMethods]: (pathOrHandler: string | Handler<TSessionBag, HandlerResult<HandlerResultValue>>, ...handlers: Handler<TSessionBag, HandlerResult<HandlerResultValue>>[]) => void
 }
 
 export type Request<TSessionBag = unknown, TView = Record<string, unknown>> = http.IncomingMessage & {
   originalUrl: string
   url: string
-  baseUrl: string
   params: Record<string, string | undefined>
   query: Record<string, string | undefined>
   body: any
@@ -88,7 +87,7 @@ export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
 }
 
 export type FunctionHandler<TSessionBag, TResult extends HandlerResult<HandlerResultValue>> = (req: Request<TSessionBag>, res: Response, next?: Function) => HandlerResult<TResult>
-export type ErrorHandler = (err: Error, req: Request<unknown>, res: Response, next?: Function) => unknown
+export type ErrorHandler = (req: Request<unknown>, res: Response, err: Error) => unknown
 export type Handler<TSessionBag, TResult extends HandlerResult<HandlerResultValue>> = FunctionHandler<TSessionBag, TResult> | Router<TSessionBag>
 export type HandlerResult<TResult extends HandlerResultValue> = HandlerResultHttpObject<TResult> | TResult
 export type HandlerResultHttpObject<TResult extends HandlerResultValue> = {

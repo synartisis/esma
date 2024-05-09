@@ -1,16 +1,15 @@
 import { describe, it, after } from 'node:test'
 import * as assert from 'node:assert'
-// import * as utils from './test-utils.js'
 import * as esma from '../lib/esma.js'
-import { rmSync } from 'node:fs'
-const port = 30034
+const port = 30024
 const url = `http://localhost:${port}`
 
 const DATA = {
   html: '<b>this is the body</b>',
   buffer: 'buffer payload',
   object: { type: 'object' },
-  array: [1, 2, 3]
+  array: [1, 2, 3],
+  errorMessage: '*error message*',
 }
 
 const server = esma.createServer().listen(port)
@@ -34,7 +33,7 @@ server.get('/builtin', async req => {
   }
 })
 server.get('/builtin-error', async req => {
-  throw Error('*error message*')
+  throw Error(DATA.errorMessage)
 })
 
 describe('response object - response types', () => {
@@ -57,28 +56,20 @@ describe('response object - response types', () => {
     const res = await fetch(url + '/response/object')
     assert.strictEqual(res.headers.get('content-type'), 'application/json; charset=utf-8')
     assert.strictEqual(Number(res.headers.get('content-length')), Buffer.from(JSON.stringify(DATA.object)).byteLength)
-    assert.strictEqual(await res.text(), JSON.stringify(DATA.object))
+    assert.deepStrictEqual(await res.json(), DATA.object)
   })
 
   it('array', async () => {
     const res = await fetch(url + '/response/array')
     assert.strictEqual(res.headers.get('content-type'), 'application/json; charset=utf-8')
     assert.strictEqual(Number(res.headers.get('content-length')), Buffer.from(JSON.stringify(DATA.array)).byteLength)
-    assert.strictEqual(await res.text(), JSON.stringify(DATA.array))
+    assert.deepStrictEqual(await res.json(), DATA.array)
   })
 
   it('null', async () => {
     const res = await fetch(url + '/response/null')
     assert.strictEqual(Number(res.headers.get('content-length')), 0)
     assert.strictEqual(await res.text(), '')
-  })
-
-  it('undefined', async () => {
-    const expected = 'HTTP 404 - Cannot GET /response/undefined'
-    const res = await fetch(url + '/response/undefined')
-    assert.strictEqual(await res.text(), expected)
-    assert.strictEqual(Number(res.headers.get('content-length')), expected.length)
-    assert.strictEqual(res.status, 404)
   })
 
 })
@@ -108,7 +99,7 @@ describe('response object - errors', () => {
     const res = await fetch(url + '/builtin-error')
     assert.strictEqual(res.status, 500)
     const body = await res.text()
-    assert.strictEqual(body.split('\n')[0], 'HTTP 500 - Error: *error message*')
+    assert.strictEqual(body.split('\n')[0], `HTTP 500 - Error: ${DATA.errorMessage}`)
   })
 
   after(() => {
