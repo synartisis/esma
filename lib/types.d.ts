@@ -86,14 +86,20 @@ export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
   redirect: (loc: string) => void
 }
 
-export type Handler<TSessionBag = Record<string, unknown>, TResult extends HandlerResult<HandlerResultValue> = HandlerResult<HandlerResultValue>> = (req: Request<TSessionBag>, res: Response, next?: Function) => HandlerResult<TResult> | Promise<HandlerResult<TResult>>
+export type Handler<
+  TSessionBag = Record<string, unknown>,
+  TView = Record<string, unknown>,
+  TResult extends HandlerResultValue = HandlerResultValue
+  > = (req: Request<TSessionBag, TView>, res: Response<TView>, next?: Function) => HandlerResult<TResult> | Promise<HandlerResult<TResult>>
+
 export type HandlerResult<TResult extends HandlerResultValue = HandlerResultValue> = HandlerResultHttpObject<TResult> | TResult
 export type HandlerResultHttpObject<TResult extends HandlerResultValue> = {
   $statusCode?: number
   $headers?: Record<string, string>
   $body: TResult
 }
-export type HandlerResultValue = string | number | Date | object | void //| Record<string, unknown> | Record<string, unknown>[] | number[] | Buffer | null | void// | unknown
+export type HandlerResultValue = string | string[] | number | number[] | Date | Buffer | Record<string, unknown> | Record<string, unknown>[] | null | void
+
 export type ErrorHandler = (req: Request, res: Response, err: Error) => unknown
 
 export type Session<TSessionBag = Record<string, unknown>> = {
