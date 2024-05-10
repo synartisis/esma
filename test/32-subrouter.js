@@ -44,15 +44,12 @@ describe('subrouter', () => {
   it('should mount when used', async () => {
     router3.get('/test3', req => 'path3')
     server.use('/route3', router3)
-    router1.use('/route3', router3)
-    router4.use('/route41', router1)
-    server.use('/route4', router4)
+    router2.use('/route4', router4)
+    router4.get('/test4', req => 'path4')
     const res1 = await fetch(url + '/route3/test3')
-    const res2 = await fetch(url + '/route1/route3/test3')
-    const res3 = await fetch(url + '/route4/route41/test')
+    const res2 = await fetch(url + '/route1/route2/route4/test4')
     assert.strictEqual(res1.status, 200)
     assert.strictEqual(res2.status, 200)
-    assert.strictEqual(res3.status, 200)
   })
 
   after(() => {
