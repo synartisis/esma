@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test'
-import * as esma from '../lib/esma.js'
+import * as esma from 'esma'
 
 // this test is only for type checking
 

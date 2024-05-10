@@ -1,7 +1,7 @@
 import { describe, it, after } from 'node:test'
 import * as assert from 'node:assert'
 import * as fs from 'node:fs/promises'
-import * as esma from '../lib/esma.js'
+import * as esma from 'esma'
 const port = 30040
 const url = `http://localhost:${port}`
 
@@ -50,6 +50,7 @@ describe('static', () => {
   it('should ignore cache-busting signature', async () => {
     const res = await fetch(url + '/static/styles.ffffff.css')
     assert.strictEqual(res.status, 200)
+    assert.strictEqual(res.headers.get('content-type'), 'text/css; charset=utf-8')
   })
 
   after(() => {

@@ -1,6 +1,6 @@
 import { describe, it, after } from 'node:test'
 import * as assert from 'node:assert'
-import * as esma from '../lib/esma.js'
+import * as esma from 'esma'
 const port = 30030
 const url = `http://localhost:${port}`
 

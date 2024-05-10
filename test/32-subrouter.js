@@ -1,12 +1,14 @@
 import { describe, it, after } from 'node:test'
 import * as assert from 'node:assert'
-import * as esma from '../lib/esma.js'
+import * as esma from 'esma'
 const port = 30032
 const url = `http://localhost:${port}`
 
 const server = esma.createServer().listen(port)
 const router1 = esma.router()
 const router2 = esma.router()
+const router3 = esma.router()
+const router4 = esma.router()
 server.use('/route1', router1)
 router1.use('/route2', router2)
 
@@ -37,6 +39,20 @@ describe('subrouter', () => {
     })
     const res = await fetch(url + '/route1/route2/paths2')
     assert.deepStrictEqual(await res.json(), { url: '/paths2', originalUrl: '/route1/route2/paths2' })
+  })
+
+  it('should mount when used', async () => {
+    router3.get('/test3', req => 'path3')
+    server.use('/route3', router3)
+    router1.use('/route3', router3)
+    router4.use('/route41', router1)
+    server.use('/route4', router4)
+    const res1 = await fetch(url + '/route3/test3')
+    const res2 = await fetch(url + '/route1/route3/test3')
+    const res3 = await fetch(url + '/route4/route41/test')
+    assert.strictEqual(res1.status, 200)
+    assert.strictEqual(res2.status, 200)
+    assert.strictEqual(res3.status, 200)
   })
 
   after(() => {

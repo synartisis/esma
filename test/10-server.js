@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import * as assert from 'node:assert'
-import { config, settings } from '../lib/esma-settings.js'
-import * as esma from '../lib/esma.js'
+import * as esma from 'esma'
+import { settings } from '../lib/esma-settings.js'
 const port = 30010
 const url = `http://localhost:${port}`
 
@@ -17,7 +17,7 @@ describe('server', () => {
 
   it('should validate user settings', async () => {
     const defaultSettingsJson = JSON.stringify(settings)
-    config({
+    esma.config({
       // @ts-expect-error
       etag: 'unknown',
       // @ts-expect-error
