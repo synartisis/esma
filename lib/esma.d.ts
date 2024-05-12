@@ -6,7 +6,7 @@ import type * as http from 'node:http'
  * @return {Server}
  * @example const server = esma.createServer()
  * */
-export function createServer<TSessionBag>(): Server<TSessionBag>;
+export function createServer<TSessionBag, TView>(): Server<TSessionBag, TView>;
 
 
 /**
@@ -25,7 +25,7 @@ export function static(root: string, options: Partial<StaticOptions>): Handler
  * const r = router()
  * r.get(...)
  */
-export function router<TSessionBag>(): Router<TSessionBag>
+export function router<TSessionBag, TView>(): Router<TSessionBag, TView>
 export { router as Router }
 
 
@@ -57,7 +57,7 @@ export function authorize(allowedRoles: string[]): Handler
 
 export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
 
-export type Server<TSessionBag> = http.Server & Router<TSessionBag>
+export type Server<TSessionBag, TView> = http.Server & Router<TSessionBag, TView>
 
 export type Router<TSessionBag = Record<string, unknown>, TView = Record<string, unknown>> = {
   use: (pathOrHandler: string | Handler<TSessionBag, TView, HandlerResult<HandlerResultValue>> | Router<TSessionBag, TView>, ...handlers: Array<Handler<TSessionBag, TView, HandlerResult<HandlerResultValue>> | Router<TSessionBag, TView>>) => void
