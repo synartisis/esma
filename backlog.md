@@ -1,3 +1,5 @@
+session timeout: set cookie timeout and remove session entry from memory
+
 remove express
 
 add { $action: 'skip-router' }
