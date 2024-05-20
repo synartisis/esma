@@ -57,7 +57,7 @@ export function authorize(allowedRoles: string[]): Handler
 
 export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
 
-export type Server<TSessionBag, TView> = http.Server & Router<TSessionBag, TView>
+export type Server<TSessionBag = Record<string, unknown>, TView = Record<string, unknown>> = http.Server & Router<TSessionBag, TView>
 
 export type Router<TSessionBag = Record<string, unknown>, TView = Record<string, unknown>> = {
   use: (pathOrHandler: string | Handler<TSessionBag, TView, HandlerResult<HandlerResultValue>> | Router<TSessionBag, TView>, ...handlers: Array<Handler<TSessionBag, TView, HandlerResult<HandlerResultValue>> | Router<TSessionBag, TView>>) => void
