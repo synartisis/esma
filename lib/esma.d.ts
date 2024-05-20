@@ -81,7 +81,6 @@ export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
   locals: TView
   view: TView
   bag: Record<string, any>
-  send: (body: any) => void
   redirect: (loc: string) => void
 }
 
@@ -89,7 +88,7 @@ export type Handler<
   TSessionBag = Record<string, unknown>,
   TView = Record<string, unknown>,
   TResult extends HandlerResultValue = HandlerResultValue
-  > = (req: Request<TSessionBag, TView>, res: Response<TView>, next?: Function) => HandlerResult<TResult> | Promise<HandlerResult<TResult>>
+  > = (req: Request<TSessionBag, TView>, res: Response<TView>) => HandlerResult<TResult> | Promise<HandlerResult<TResult>>
 
 export type HandlerResult<TResult extends HandlerResultValue = HandlerResultValue> = HandlerResultHttpObject<TResult> | TResult
 export type HandlerResultHttpObject<TResult extends HandlerResultValue> = {
