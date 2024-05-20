@@ -32,6 +32,15 @@ describe('typical project', () => {
     assert.strictEqual(res2.headers.get('content-type'), 'text/css; charset=utf-8')
   })
 
+  it(`should support $action: 'skip-router'`, async () => {
+    const res1 = await fetch(url + '/route31/path1')
+    const res2 = await fetch(url + '/route31/path3')
+    const res3 = await fetch(url + '/route32/path1')
+    assert.strictEqual(res1.status, 200)
+    assert.strictEqual(res2.status, 404)
+    assert.strictEqual(res3.status, 200)
+  })
+
   after(() => {
     server.close()
   })

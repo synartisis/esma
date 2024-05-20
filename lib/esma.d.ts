@@ -96,6 +96,7 @@ export type HandlerResultHttpObject<TResult extends HandlerResultValue> = {
   $statusCode?: number
   $headers?: Record<string, string>
   $body: TResult
+  $action: 'skip-router'
 }
 export type HandlerResultValue = string | string[] | number | number[] | Date | Buffer | Record<string, unknown> | Record<string, unknown>[] | null | void
 
