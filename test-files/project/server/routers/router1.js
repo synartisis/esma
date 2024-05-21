@@ -5,4 +5,4 @@ export { r as router1 }
 
 r.use('/route2', router2)
 
-r.get('/path1', req => 'ok-path1')
+r.get('/path1', req => ['ok-path1', req.bag.check])
