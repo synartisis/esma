@@ -14,7 +14,7 @@ server.use(req => {
   req.bag.check = true
 })
 
-server.get('/middleware', req => {
+server.get('/check-middleware', req => {
   return req.bag.check
 })
 

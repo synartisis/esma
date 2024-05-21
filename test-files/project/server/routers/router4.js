@@ -4,7 +4,7 @@ export { r as router4 }
 
 r.get('/params/:p1/static/:p2', req => {
   const { p1, p2 } = req.params
-  return { p1, p2 }
+  return { p1, p2, check: req.bag.check }
 })
 
 r.get('/query', req => {

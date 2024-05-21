@@ -4,12 +4,11 @@ import { server } from '../test-files/project/server/server.js'
 const port = 30090
 const url = `http://localhost:${port}`
 
-// server.listen(port)
 
 describe('typical project', () => {
 
   it('should use middleware', async () => {
-    const res = await fetch(url + '/middleware')
+    const res = await fetch(url + '/check-middleware')
     assert.strictEqual(res.status, 200)
     assert.strictEqual(await res.json(), true)
   })
@@ -46,10 +45,12 @@ describe('typical project', () => {
     assert.strictEqual(res.status, 404)
     res = await fetch(url + '/route4/params/value1/static/')
     assert.strictEqual(res.status, 404)
+    res = await fetch(url + '/route4/params/value1/Static/value2')
+    assert.strictEqual(res.status, 404)
     res = await fetch(url + '/route4/params/value1/static/value2')
     assert.strictEqual(res.status, 200)
     let body = await res.json()
-    assert.deepStrictEqual(body, { p1: 'value1', p2: 'value2' })
+    assert.deepStrictEqual(body, { p1: 'value1', p2: 'value2', check: true })
     res = await fetch(url + '/route4/params/value1/static/value2/')
     assert.strictEqual(res.status, 404)
   })
