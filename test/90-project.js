@@ -40,6 +40,12 @@ describe('typical project', () => {
     assert.strictEqual(res.status, 200)
   })
 
+  it('url', async () => {
+    let res = await fetch(url + '/route4/url')
+    let body = await res.json()
+    assert.deepStrictEqual(body, { url: '/url', originalUrl: '/route4/url' })
+  })
+
   it(`params`, async () => {
     let res = await fetch(url + '/route4/params/value1')
     assert.strictEqual(res.status, 404)
