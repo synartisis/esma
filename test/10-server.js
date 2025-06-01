@@ -2,17 +2,17 @@ import { describe, it } from 'node:test'
 import * as assert from 'node:assert'
 import * as esma from 'esma'
 import { settings } from '../lib/esma-settings.js'
-const port = 30010
-const url = `http://localhost:${port}`
+
 
 describe('server', () => {
 
   it('should create an http server', async () => {
-    const server = esma.createServer().listen(port)
-    server.get('/ping', async () => 'pong')
-    const res = await fetch(url + '/ping')
-    assert.strictEqual(await res.text(), `pong`)
-    server.close()
+    const newServer = esma.createServer().listen(30011)
+    newServer.get('/ping', async () => 'pong')
+    const res1 = await fetch(`http://localhost:30011/ping`)
+    assert.strictEqual(await res1.text(), `pong`)
+    newServer.close()
+    assert.rejects(() => fetch(`http://localhost:30011/ping`))
   })
 
   it('should validate user settings', async () => {

@@ -12,7 +12,7 @@
   },
   "scripts": {
     "types:check": "tsc -p tsconfig.json",
-    "test": "node --test",
+    "test": "node --test --test-global-setup test/globalSetup.js",
     "preversion": "npm run types:check && npm test"
   },
   "files": [
