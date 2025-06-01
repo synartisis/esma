@@ -41,4 +41,23 @@ describe('static', () => {
     assert.strictEqual(res.headers.get('content-type'), 'text/css; charset=utf-8')
   })
 
+  it('should support range requests', async () => {
+    const url = global.url + '/40/static/assets/large-file.txt'
+    let res = await fetch(url, { headers: { 'Range': 'bytes=0-10' } })
+    assert.strictEqual(res.status, 206)
+    assert.strictEqual(res.headers.get('accept-ranges'), 'bytes')
+    assert.strictEqual(res.headers.get('content-length'), '11')
+    let body = await res.text()
+    assert.strictEqual(body, '1234567890\n')
+
+    res = await fetch(url, { headers: { 'Range': 'bytes=100-' } })
+    body = await res.text()
+    assert.strictEqual(body, '234567890\n*')
+
+    res = await fetch(url, { headers: { 'Range': 'bytes=50-40' } })
+    assert.strictEqual(res.status, 416)  // Range Not Satisfiable
+    res = await fetch(url, { headers: { 'Range': 'bytes=50-200' } })
+    assert.strictEqual(res.status, 416)  // Range Not Satisfiable
+  })
+
 })
