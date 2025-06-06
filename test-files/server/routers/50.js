@@ -8,7 +8,9 @@ r.use('/err/:type', req => {
   const { type } = req.params
   if (type === 'plain-text') throw errorMessage
   if (type === 'error-function') throw Error(errorMessage)
-  if (type === 'error-constractor') throw new Error(errorMessage)
+  if (type === 'error-constructor') throw new Error(errorMessage)
+  if (type === 'esma-error-500') throw new esma.HttpError(500, errorMessage)
+  if (type === 'esma-error-400') throw new esma.HttpError(400, errorMessage)
 })
 
 r.onerror((req, res, err) => {

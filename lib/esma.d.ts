@@ -52,8 +52,7 @@ export function multilingual(languages: string[]): Handler
  */
 export function authorize(allowedRoles: string[]): Handler
 
-
-
+export { HttpError } from './utils.js'
 
 export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
 
