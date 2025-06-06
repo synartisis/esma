@@ -1,7 +1,7 @@
 {
   "name": "esma",
   "version": "0.5.8",
-  "description": "",
+  "description": "simple web server",
   "type": "module",
   "exports": {
     ".": {
@@ -27,13 +27,13 @@
     "url": "git+https://github.com/synartisis/esma.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "mike galakos",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/synartisis/esma/issues"
   },
   "homepage": "https://github.com/synartisis/esma#readme",
   "devDependencies": {
-    "@types/node": "^22.15.29"
+    "@types/node": "^22.15.30"
   }
 }

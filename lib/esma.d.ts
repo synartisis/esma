@@ -74,7 +74,7 @@ export type Request<TSessionBag = Record<string, unknown>, TView = Record<string
   body: any
   view: TView
   bag: Record<string, any>
-  session: Session<TSessionBag>
+  session: Session
 }
 
 export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
@@ -101,22 +101,28 @@ export type HandlerResultValue = string | string[] | number | number[] | Date | 
 
 export type ErrorHandler = (req: Request, res: Response, err: Error) => unknown
 
-export type Session<TSessionBag = Record<string, unknown>> = {
-  readonly isLoggedOn: true
-  login(username: string, roles: string[], bag?: TSessionBag): void
-  logout(): void
-} & SessionData<TSessionBag> | {
-  readonly isLoggedOn: false
-  login(username: string, roles: string[], bag?: TSessionBag): void
-  logout(): void
-}
 
-export type SessionData<TSessionBag = Record<string, unknown>> = {
+export type Session = {
+  login(username: string, roles: string[], bag?: Record<string, unknown>): void
+  logout(): void
+} & (SessionDetached | SessionAttached | SessionLoggenOn)
+export type SessionDetached = {
+  status: 'detached'
+  attach(bag?: Record<string, unknown>): void
+}
+export type SessionAttached = {
+  status: 'attached'
   sessionId: string
+  bag: Record<string, unknown>
+  detach(): void
+}
+export type SessionLoggenOn = Omit<SessionAttached, 'status'> & {
+  status: 'loggedon'
   username: string
   roles: string[]
-  bag: TSessionBag
 }
+export type SessionData = Omit<SessionAttached, 'detach'> | Omit<SessionLoggenOn, 'detach'>
+
 
 export type StaticOptions = {
   dotfiles: 'deny' | 'ignore',
