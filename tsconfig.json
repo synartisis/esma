@@ -6,6 +6,8 @@
     "noEmit": true,
     "module": "NodeNext",
     "target": "ESNext",
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "moduleResolution": "nodenext"
   },
   "include": ["./lib/**/*", "./test/*"],

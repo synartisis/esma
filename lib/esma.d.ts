@@ -113,6 +113,7 @@ export type SessionAttached = {
   status: 'attached'
   sessionId: string
   bag: Record<string, unknown>
+  lastActivity: Date
   detach(): void
 }
 export type SessionLoggenOn = Omit<SessionAttached, 'status'> & {
