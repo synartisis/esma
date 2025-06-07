@@ -6,7 +6,7 @@ import type * as http from 'node:http'
  * @return {Server}
  * @example const server = esma.createServer()
  * */
-export function createServer<TSessionBag, TView>(): Server<TSessionBag, TView>;
+export function createServer(): Server
 
 
 /**
@@ -25,7 +25,7 @@ export function static(root: string, options: Partial<StaticOptions>): Handler
  * const r = router()
  * r.get(...)
  */
-export function router<TSessionBag, TView>(): Router<TSessionBag, TView>
+export function router(): Router
 export { router as Router }
 
 
@@ -52,20 +52,20 @@ export function multilingual(languages: string[]): Handler
  */
 export function authorize(allowedRoles: string[]): Handler
 
-export { HttpError } from './utils.js'
+export { HttpError, httpRedirect } from './utils.js'
 
 export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
 
-export type Server<TSessionBag = Record<string, unknown>, TView = Record<string, unknown>> = http.Server & Router<TSessionBag, TView>
+export type Server = http.Server & Router
 
-export type Router<TSessionBag = Record<string, unknown>, TView = Record<string, unknown>> = {
-  use: (pathOrHandler: string | Handler<TSessionBag, TView, HandlerResult<HandlerResultValue>> | Router<TSessionBag, TView>, ...handlers: Array<Handler<TSessionBag, TView, HandlerResult<HandlerResultValue>> | Router<TSessionBag, TView>>) => void
+export type Router = {
+  use: (pathOrHandler: string | Handler<HandlerResult<HandlerResultValue>> | Router, ...handlers: Array<Handler<HandlerResult<HandlerResultValue>> | Router>) => void
   onerror(handler: ErrorHandler): void
 } & {
-  [method in HttpMethods]: (path: string, ...handlers: Handler<TSessionBag, TView, HandlerResult<HandlerResultValue>>[]) => void
+  [method in HttpMethods]: (path: string, ...handlers: Handler<HandlerResult<HandlerResultValue>>[]) => void
 }
 
-export type Request<TSessionBag = Record<string, unknown>, TView = Record<string, unknown>> = http.IncomingMessage & {
+export type Request<TView = Record<string, unknown>> = http.IncomingMessage & {
   url: string
   originalUrl: string
   params: Record<string, string | undefined>
@@ -84,13 +84,11 @@ export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
 }
 
 export type Handler<
-  TSessionBag = Record<string, unknown>,
-  TView = Record<string, unknown>,
   TResult extends HandlerResultValue = HandlerResultValue
-  > = (req: Request<TSessionBag, TView>, res: Response<TView>) => HandlerResult<TResult> | Promise<HandlerResult<TResult>>
+  > = (req: Request, res: Response) => HandlerResult<TResult> | Promise<HandlerResult<TResult>>
 
 export type HandlerResult<TResult extends HandlerResultValue = HandlerResultValue> = HandlerResultHttpObject<TResult> | TResult
-export type HandlerResultHttpObject<TResult extends HandlerResultValue> = {
+export type HandlerResultHttpObject<TResult extends HandlerResultValue = HandlerResultValue> = {
   $statusCode?: number
   $headers?: Record<string, string>
   $body: TResult
