@@ -59,27 +59,27 @@ export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options'
 export type Server = http.Server & Router
 
 export type Router = {
-  use: (pathOrHandler: string | Handler<HandlerResult<HandlerResultValue>> | Router, ...handlers: Array<Handler<HandlerResult<HandlerResultValue>> | Router>) => void
+  use: (pathOrHandler: string | Handler | Router, ...handlers: Array<Handler | Router>) => void
   onerror(handler: ErrorHandler): void
 } & {
-  [method in HttpMethods]: (path: string, ...handlers: Handler<HandlerResult<HandlerResultValue>>[]) => void
+  [method in HttpMethods]: (path: string, ...handlers: Handler[]) => void
 }
 
-export type Request<TView = Record<string, unknown>> = http.IncomingMessage & {
+export type Request = http.IncomingMessage & {
   url: string
   originalUrl: string
   params: Record<string, string | undefined>
   query: Record<string, string | undefined>
   body: any
-  view: TView
+  view: Record<string, unknown>
   bag: Record<string, any>
   session: Session
 }
 
-export type Response<TView = Record<string, unknown>> = http.ServerResponse & {
-  locals: TView
-  view: TView
-  bag: Record<string, any>
+export type Response = http.ServerResponse & {
+  locals: Record<string, unknown>
+  view: Record<string, unknown>
+  bag: Record<string, unknown>
   redirect: (loc: string) => void
 }
 
@@ -89,9 +89,9 @@ export type Handler<
 
 export type HandlerResult<TResult extends HandlerResultValue = HandlerResultValue> = HandlerResultHttpObject<TResult> | TResult
 export type HandlerResultHttpObject<TResult extends HandlerResultValue = HandlerResultValue> = {
-  $statusCode?: number
+  $statusCode: number
   $headers?: Record<string, string>
-  $body: TResult
+  $body?: TResult
   $action?: 'skip-router'
 }
 export type HandlerResultValue = string | string[] | number | number[] | Date | Buffer | Record<string, unknown> | Record<string, unknown>[] | null | void
@@ -149,3 +149,6 @@ export type Settings = {
   /** automaticaly redirect 401 errors */
   authorizationUrl: string
 }
+
+
+type ExcludeKeys<T, K extends PropertyKey> = { [P in Exclude<keyof T, K>]: T[P] }
