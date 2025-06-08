@@ -52,7 +52,32 @@ export function multilingual(languages: string[]): Handler
  */
 export function authorize(allowedRoles: string[]): Handler
 
-export { HttpError, httpRedirect } from './utils.js'
+
+/**
+ * esma Error object to be thrown inside Handlers
+ * @param {keyof typeof httpErrorStatusCodes} statusCode http error status code
+ * @param {string} [message] error message, if not defined the standard message for the status code will be included
+ * @example
+ * server.get('/a-path', req => {
+ *   if (missingArgument) throw new esma.HttpError(400, 'an argument is missing')
+ * })
+ */
+export class HttpError extends Error {
+  constructor(statusCode: number, message?: string)
+}
+
+
+/**
+ * redirect helper
+ * @param location redirect location url
+ * @param statusCode http status code (default 302)
+ * @example
+ * server.get('/a-path', req => {
+ *   return esma.httpRedirect('/')  // back to root
+ * })
+ */
+export function httpRedirect(location: string, statusCode?: keyof [302]): HandlerResultHttpObject
+
 
 export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
 
