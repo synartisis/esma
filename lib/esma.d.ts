@@ -98,7 +98,7 @@ export type Request = http.IncomingMessage & {
   body: any
   view: Record<string, unknown>
   bag: Record<string, any>
-  session: Session
+  session: SessionHandler
 }
 
 export type Response = http.ServerResponse & {
@@ -124,27 +124,36 @@ export type HandlerResultValue = string | string[] | number | number[] | Date | 
 export type ErrorHandler = (req: Request, res: Response, err: Error) => unknown
 
 
-export type Session = {
-  login(username: string, roles: string[], bag?: Record<string, unknown>): void
-  logout(): void
-} & (SessionDetached | SessionAttached | SessionLoggenOn)
-export type SessionDetached = {
+export type SessionHandler = SessionHandlerDetached | SessionHandlerAttached | SessionHandlerLoggenOn
+export type SessionHandlerDetached = {
   status: 'detached'
   attach(bag?: Record<string, unknown>): void
-}
-export type SessionAttached = {
+} & SessionHandlerBase
+export type SessionHandlerAttached = {
   status: 'attached'
   sessionId: string
   bag: Record<string, unknown>
-  lastActivity: Date
+  // lastActivity: Date
   detach(): void
-}
-export type SessionLoggenOn = Omit<SessionAttached, 'status'> & {
+} & SessionHandlerBase
+export type SessionHandlerLoggenOn = Omit<SessionHandlerAttached, 'status'> & {
   status: 'loggedon'
   username: string
   roles: string[]
 }
-export type SessionData = Omit<SessionAttached, 'detach'> | Omit<SessionLoggenOn, 'detach'>
+type SessionHandlerBase = {
+  login(username: string, roles: string[], bag?: Record<string, unknown>): void
+  logout(): void
+}
+// export type Session = {
+//   status: 'attached' | 'loggedon'
+//   sessionId: string
+//   bag: Record<string, unknown>
+//   username: string | null
+//   roles: string[]
+//   lastActivity: Date
+// }
+//Omit<SessionHandlerAttached, 'detach'> | Omit<SessionHandlerLoggenOn, 'detach'>
 
 
 export type StaticOptions = {

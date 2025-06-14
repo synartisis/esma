@@ -1,12 +1,32 @@
-import type * as types from './esma.d.ts'
+import type * as esma from './esma.d.ts'
 
 
 declare global {
 
-  type Context = {
-    settings: types.Settings
-    skippedRouters: import('./handlers/router.js').RouterObject[]
+  namespace types {
+
+    type Context = {
+      settings: esma.Settings
+      skippedRouters: import('./handlers/router.js').RouterObject[]
+    }
+
+    type SessionAttached = {
+      status: 'attached'
+      sessionId: string
+      bag: Record<string, unknown>
+      lastActivity: Date
+    }
+  
+    type SessionLoggedOn = Omit<SessionAttached, 'status'> & {
+      status: 'loggedon'
+      username: string
+      roles: string[]
+    }
+
+    type Session = SessionAttached | SessionLoggedOn
+
   }
+
 
 }
 
