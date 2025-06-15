@@ -145,15 +145,6 @@ type SessionHandlerBase = {
   login(username: string, roles: string[], bag?: Record<string, unknown>): void
   logout(): void
 }
-// export type Session = {
-//   status: 'attached' | 'loggedon'
-//   sessionId: string
-//   bag: Record<string, unknown>
-//   username: string | null
-//   roles: string[]
-//   lastActivity: Date
-// }
-//Omit<SessionHandlerAttached, 'detach'> | Omit<SessionHandlerLoggenOn, 'detach'>
 
 
 export type StaticOptions = {
@@ -183,6 +174,3 @@ export type Settings = {
   /** automaticaly redirect 401 errors */
   authorizationUrl: string
 }
-
-
-type ExcludeKeys<T, K extends PropertyKey> = { [P in Exclude<keyof T, K>]: T[P] }
