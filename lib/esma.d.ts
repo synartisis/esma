@@ -121,7 +121,7 @@ export type HandlerResultHttpObject<TResult extends HandlerResultValue = Handler
 }
 export type HandlerResultValue = string | string[] | number | number[] | Date | Buffer | Record<string, unknown> | Record<string, unknown>[] | null | void
 
-export type ErrorHandler = (req: Request, res: Response, err: Error) => unknown
+export type ErrorHandler = (req: Request, res: Response, err: Error) => string | Promise<string>
 
 
 export type SessionHandler = SessionHandlerDetached | SessionHandlerAttached | SessionHandlerLoggenOn
