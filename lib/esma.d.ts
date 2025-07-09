@@ -64,6 +64,7 @@ export function authorize(allowedRoles: string[]): Handler
  */
 export class HttpError extends Error {
   constructor(statusCode: number, message?: string)
+  statusCode: number
 }
 
 
@@ -76,7 +77,7 @@ export class HttpError extends Error {
  *   return esma.httpRedirect('/')  // back to root
  * })
  */
-export function httpRedirect(location: string, statusCode?: keyof [302]): HandlerResultHttpObject
+export function httpRedirect(location: string, statusCode?: keyof [302, 301, 307, 308]): HandlerResultHttpObject
 
 
 export type HttpMethods = 'get' | 'post' | 'put' | 'delete' | 'head' | 'options' | 'trace' | 'patch'
@@ -121,7 +122,7 @@ export type HandlerResultHttpObject<TResult extends HandlerResultValue = Handler
 }
 export type HandlerResultValue = string | string[] | number | number[] | Date | Buffer | Record<string, unknown> | Record<string, unknown>[] | null | void
 
-export type ErrorHandler = (req: Request, res: Response, err: Error) => string | Promise<string>
+export type ErrorHandler = (err: Error, req: Request, res: Response) => string | Promise<string> | void | Promise<void>
 
 
 export type SessionHandler = SessionHandlerDetached | SessionHandlerAttached | SessionHandlerLoggenOn

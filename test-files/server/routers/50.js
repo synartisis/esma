@@ -13,6 +13,6 @@ r.use('/err/:type', req => {
   if (type === 'esma-error-400') throw new esma.HttpError(400, errorMessage)
 })
 
-r.onerror((req, res, err) => {
+r.onerror(err => {
   return err.message
 })

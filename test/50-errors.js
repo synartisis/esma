@@ -16,18 +16,15 @@ describe('error handling', () => {
     res = await fetch(global.url + '/50/err/error-constructor')
     assert.equal(res.status, 500)
     assert.equal((await res.text()).split('\n')[0], `HTTP 500 - Error: ${errorMessage}`)
-    res = await fetch(global.url + '/50/err/esma-error-500')
+  })
+
+  it('should handle throw esma.HttpError', async () => {
+    let res = await fetch(global.url + '/50/err/esma-error-500')
     assert.equal(res.status, 500)
     assert.equal((await res.text()).split('\n')[0], `HTTP 500 - ${errorMessage}`)
     res = await fetch(global.url + '/50/err/esma-error-400')
     assert.equal(res.status, 400)
     assert.equal((await res.text()).split('\n')[0], `HTTP 400 - ${errorMessage}`)
-  })
-
-  it('should use error handlers', async () => {
-    const res = await fetch(global.url + '/50/err/error-constructor')
-    assert.equal(res.status, 500)
-    assert.equal((await res.text()).split('\n')[0], `HTTP 500 - Error: ${errorMessage}`)
   })
 
 })

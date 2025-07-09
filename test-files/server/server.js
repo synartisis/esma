@@ -14,7 +14,6 @@ import { r60 } from './routers/60.js'
 import { r90 } from './routers/90.js'
 
 // const port = 30090
-const port = 30100
 const __dirname = new URL('.', import.meta.url).pathname
 export const server = esma.createServer()
 
